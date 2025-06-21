@@ -78,13 +78,64 @@ public partial class InventorySystem : EntitySystem
 
     protected virtual void UpdateInventoryTemplate(Entity<InventoryComponent> ent)
     {
+        Log.Debug("Checking initialized");
         if (ent.Comp.LifeStage < ComponentLifeStage.Initialized)
             return;
 
         if (!_prototypeManager.TryIndex(ent.Comp.TemplateId, out InventoryTemplatePrototype? invTemplate))
             return;
 
-        DebugTools.Assert(ent.Comp.Slots.Length == invTemplate.Slots.Length);
+        foreach (var container in ent.Comp.Containers)
+        {
+            if (invTemplate.Slots.Any(s => s.Name == container.ID))
+                continue;
+
+            TryGetSlotContainer(ent.Owner, container.ID, out var deleteSlot, out var _);
+
+            if (deleteSlot == null)
+            {
+                continue;
+            }
+
+            _containerSystem.EmptyContainer(deleteSlot, true);
+            _containerSystem.ShutdownContainer(deleteSlot);
+            Log.Debug("Shutting down: " + deleteSlot.ID);
+        }
+
+        foreach (var slot in invTemplate.Slots)
+        {
+            Log.Debug("Current slots in new template: " + slot.Name);
+        }
+        foreach (var invslot in ent.Comp.Slots)
+        {
+            Log.Debug("Current slots in old template: " + invslot.Name);
+        }
+
+        Log.Debug("New template slot length:" + invTemplate.ID + " " + invTemplate.Slots.Length.ToString());
+        Log.Debug("Current template slot length:" + ent.Comp.TemplateId + " " + ent.Comp.Slots.Length.ToString());
+        Log.Debug("Current template container length:" + ent.Comp.TemplateId + " " + ent.Comp.Containers.Length);
+
+        SetTemplateId(ent, invTemplate);
+
+        ent.Comp.Slots = invTemplate.Slots;
+        Log.Debug("Updated slot length:" + ent.Comp.TemplateId + " " + ent.Comp.Slots.Length.ToString());
+        ent.Comp.Containers = new ContainerSlot[ent.Comp.Slots.Length];
+        Log.Debug("Updated container length:" + ent.Comp.TemplateId + " " + ent.Comp.Containers.Length);
+        for (var i = 0; i < ent.Comp.Containers.Length; i++)
+        {
+            var slot = ent.Comp.Slots[i];
+            var container = _containerSystem.EnsureContainer<ContainerSlot>(ent, slot.Name);
+            container.OccludesLight = false;
+            ent.Comp.Containers[i] = container;
+            Log.Debug("Adding: " + slot.Name);
+        }
+
+        foreach (var slot in invTemplate.Slots)
+        {
+            Log.Debug("Updated with slots: " + slot.Name);
+        }
+
+        // DebugTools.Assert(ent.Comp.Slots.Length == invTemplate.Slots.Length);
 
         ent.Comp.Slots = invTemplate.Slots;
 
@@ -212,11 +263,22 @@ public partial class InventorySystem : EntitySystem
     {
         var newPrototype = _prototypeManager.Index(newTemplate);
 
-        if (!newPrototype.Slots.Select(x => x.Name).SequenceEqual(ent.Comp.Slots.Select(x => x.Name)))
-            throw new ArgumentException("Incompatible inventory template!");
+        /*if (!newPrototype.Slots.Select(x => x.Name).SequenceEqual(ent.Comp.Slots.Select(x => x.Name)))
+            throw new ArgumentException("Incompatible inventory template!");*/
 
         ent.Comp.TemplateId = newTemplate;
         Dirty(ent);
+    }
+
+    public override void Update(float frameTime)
+    {
+        base.Update(frameTime);
+
+        /*var ent = EntityQueryEnumerator<InventoryComponent>();
+        while (ent.MoveNext(out var uid, out var comp))
+        {
+            UpdateInventoryTemplate((uid, comp));
+        }*/
     }
 
     /// <summary>
@@ -239,7 +301,7 @@ public partial class InventorySystem : EntitySystem
         public InventorySlotEnumerator(SlotDefinition[] slots, ContainerSlot[] containers,  SlotFlags flags = SlotFlags.All)
         {
             DebugTools.Assert(flags != SlotFlags.NONE);
-            DebugTools.AssertEqual(slots.Length, containers.Length);
+            // DebugTools.AssertEqual(slots.Length, containers.Length);
             _flags = flags;
             _slots = slots;
             _containers = containers;

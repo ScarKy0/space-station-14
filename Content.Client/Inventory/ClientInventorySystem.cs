@@ -91,6 +91,14 @@ namespace Content.Client.Inventory
 
         private void OnShutdown(EntityUid uid, InventoryComponent component, ComponentShutdown args)
         {
+            if (!TryComp(uid, out InventorySlotsComponent? inventorySlots))
+                return;
+
+            foreach (var slot in component.Slots)
+            {
+                TryRemoveSlotDef(uid, inventorySlots, slot);
+            }
+
             if (uid == _playerManager.LocalEntity)
                 OnUnlinkInventory?.Invoke();
         }
@@ -142,6 +150,7 @@ namespace Content.Client.Inventory
             }
         }
 
+
         public void ReloadInventory(InventorySlotsComponent? component = null)
         {
             var player = _playerManager.LocalEntity;
@@ -165,6 +174,9 @@ namespace Content.Client.Inventory
         public void UpdateSlot(EntityUid owner, InventorySlotsComponent component, string slotName,
             bool? blocked = null, bool? highlight = null)
         {
+            if (!HasSlot(owner, slotName))
+                return;
+
             var oldData = component.SlotData[slotName];
             var newHighlight = oldData.Highlighted;
             var newBlocked = oldData.Blocked;
@@ -189,6 +201,22 @@ namespace Content.Client.Inventory
 
             if (owner == _playerManager.LocalEntity)
                 OnSlotAdded?.Invoke(newSlotData);
+
+            Log.Debug("Added def: " + newSlotDef.Name);
+            return true;
+        }
+
+        public bool TryRemoveSlotDef(EntityUid owner, InventorySlotsComponent component, SlotDefinition newSlotDef)
+        {
+            SlotData newSlotData = newSlotDef; //convert to slotData
+            if (!component.SlotData.Remove(newSlotDef.Name))
+            {
+                return false;
+            }
+            Log.Debug("Removing def client:" + newSlotDef.Name);
+
+            if (owner == _playerManager.LocalEntity)
+                OnSlotRemoved?.Invoke(newSlotData);
             return true;
         }
 
@@ -237,16 +265,25 @@ namespace Content.Client.Inventory
 
         protected override void UpdateInventoryTemplate(Entity<InventoryComponent> ent)
         {
+            if (!TryComp(ent, out InventorySlotsComponent? inventorySlots))
+                         return;
+
+                     foreach (var slot in inventorySlots.SlotData)
+                     {
+                         if (!TryGetSlot(ent, slot.Key, out var slotdef))
+                             continue;
+
+                         TryRemoveSlotDef(ent, inventorySlots, slotdef);
+                     }
+
             base.UpdateInventoryTemplate(ent);
 
-            if (TryComp(ent, out InventorySlotsComponent? inventorySlots))
+            foreach (var slot in ent.Comp.Slots)
             {
-                foreach (var slot in ent.Comp.Slots)
-                {
-                    if (inventorySlots.SlotData.TryGetValue(slot.Name, out var slotData))
-                        slotData.SlotDef = slot;
-                }
+                TryAddSlotDef(ent, inventorySlots, slot);
             }
+
+            ReloadInventory(inventorySlots);
         }
 
         public sealed class SlotData

@@ -35,5 +35,10 @@ namespace Content.Server.Inventory
                     TryEquip(target, item, slot.Name , true, true, inventory: target.Comp, triggerHandContact: true);
             }
         }
+
+        protected override void UpdateInventoryTemplate(Entity<InventoryComponent> ent)
+        {
+            base.UpdateInventoryTemplate(ent);
+        }
     }
 }
