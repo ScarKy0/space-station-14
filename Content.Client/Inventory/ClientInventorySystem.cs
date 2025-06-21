@@ -268,13 +268,13 @@ namespace Content.Client.Inventory
             if (!TryComp(ent, out InventorySlotsComponent? inventorySlots))
                          return;
 
-                     foreach (var slot in inventorySlots.SlotData)
-                     {
-                         if (!TryGetSlot(ent, slot.Key, out var slotdef))
-                             continue;
+            foreach (var slot in inventorySlots.SlotData)
+            {
+                if (!TryGetSlot(ent, slot.Key, out var slotdef))
+                    continue;
 
-                         TryRemoveSlotDef(ent, inventorySlots, slotdef);
-                     }
+                TryRemoveSlotDef(ent, inventorySlots, slotdef);
+            }
 
             base.UpdateInventoryTemplate(ent);
 
@@ -283,7 +283,7 @@ namespace Content.Client.Inventory
                 TryAddSlotDef(ent, inventorySlots, slot);
             }
 
-            ReloadInventory(inventorySlots);
+            ReloadInventory();
         }
 
         public sealed class SlotData

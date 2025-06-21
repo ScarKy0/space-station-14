@@ -14,6 +14,10 @@ public sealed partial class InventoryComponent : Component
     [AutoNetworkedField]
     public string TemplateId { get; set; } = "human";
 
+    [DataField("newTemplateId", customTypeSerializer: typeof(PrototypeIdSerializer<InventoryTemplatePrototype>))]
+    [AutoNetworkedField]
+    public string NewTemplateId { get; set; } = "human";
+
     [DataField("speciesId")] public string? SpeciesId { get; set; }
 
     public SlotDefinition[] Slots = Array.Empty<SlotDefinition>();

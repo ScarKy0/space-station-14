@@ -39,6 +39,8 @@ namespace Content.Server.Inventory
         protected override void UpdateInventoryTemplate(Entity<InventoryComponent> ent)
         {
             base.UpdateInventoryTemplate(ent);
+
+            Log.Debug("It works!!!");
         }
     }
 }

@@ -274,11 +274,16 @@ public partial class InventorySystem : EntitySystem
     {
         base.Update(frameTime);
 
-        /*var ent = EntityQueryEnumerator<InventoryComponent>();
+        var ent = EntityQueryEnumerator<InventoryComponent>();
         while (ent.MoveNext(out var uid, out var comp))
         {
+            if (comp.NewTemplateId == comp.TemplateId)
+                continue;
+
+            SetTemplateId((uid, comp), comp.NewTemplateId);
+
             UpdateInventoryTemplate((uid, comp));
-        }*/
+        }
     }
 
     /// <summary>
