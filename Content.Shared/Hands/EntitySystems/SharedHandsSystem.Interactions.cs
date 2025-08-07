@@ -1,10 +1,12 @@
 using System.Linq;
+using Content.Shared.DisplacementMap;
 using Content.Shared.Examine;
 using Content.Shared.Hands.Components;
 using Content.Shared.IdentityManagement;
 using Content.Shared.Input;
 using Content.Shared.Interaction;
 using Content.Shared.Inventory.VirtualItem;
+using Content.Shared.Item;
 using Content.Shared.Localizations;
 using Robust.Shared.Input.Binding;
 using Robust.Shared.Map;
@@ -220,5 +222,16 @@ public abstract partial class SharedHandsSystem : EntitySystem
         {
             args.PushMarkup(Loc.GetString(locKey, locUser, locItems));
         }
+    }
+
+    public void CopyDisplacements(Entity<HandsComponent?> source, EntityUid target)
+    {
+        if (!Resolve(source, ref source.Comp))
+            return;
+
+        var targetComp = EnsureComp<HandsComponent>(target);
+        targetComp.HandDisplacement = source.Comp.HandDisplacement;
+        targetComp.LeftHandDisplacement = source.Comp.LeftHandDisplacement;
+        targetComp.RightHandDisplacement = source.Comp.RightHandDisplacement;
     }
 }

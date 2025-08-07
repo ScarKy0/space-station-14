@@ -125,13 +125,19 @@ public sealed class HandsComponentState : ComponentState
     public readonly Dictionary<string, Hand> Hands;
     public readonly List<string> SortedHands;
     public readonly string? ActiveHandId;
+    public readonly DisplacementData? HandDisplacement;
+    public readonly DisplacementData? LeftHandDisplacement;
+    public readonly DisplacementData? RightHandDisplacement;
 
-    public HandsComponentState(HandsComponent handComp)
+    public HandsComponentState(HandsComponent handComp, DisplacementData? handDisplacement, DisplacementData? leftHandDisplacement, DisplacementData? rightHandDisplacement)
     {
         // cloning lists because of test networking.
         Hands = new(handComp.Hands);
         SortedHands = new(handComp.SortedHands);
         ActiveHandId = handComp.ActiveHandId;
+        HandDisplacement = handDisplacement;
+        LeftHandDisplacement = leftHandDisplacement;
+        RightHandDisplacement = rightHandDisplacement;
     }
 }
 

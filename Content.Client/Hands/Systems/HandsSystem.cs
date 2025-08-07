@@ -16,6 +16,7 @@ using Robust.Client.UserInterface;
 using Robust.Shared.Containers;
 using Robust.Shared.GameStates;
 using Robust.Shared.Player;
+using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 
 namespace Content.Client.Hands.Systems
@@ -25,6 +26,7 @@ namespace Content.Client.Hands.Systems
     {
         [Dependency] private readonly IPlayerManager _playerManager = default!;
         [Dependency] private readonly IUserInterfaceManager _ui = default!;
+        [Dependency] private readonly IGameTiming _timing = default!;
 
         [Dependency] private readonly StrippableSystem _stripSys = default!;
         [Dependency] private readonly SpriteSystem _sprite = default!;
@@ -74,6 +76,18 @@ namespace Content.Client.Hands.Systems
             ent.Comp.SortedHands = new (state.SortedHands);
 
             SetActiveHand(ent.AsNullable(), state.ActiveHandId);
+
+            // Update all displacements, but only if any was changed.
+            if (ent.Comp.HandDisplacement != state.HandDisplacement
+                || ent.Comp.LeftHandDisplacement != state.LeftHandDisplacement
+                || ent.Comp.RightHandDisplacement != state.RightHandDisplacement)
+            {
+                ent.Comp.HandDisplacement = state.HandDisplacement;
+                ent.Comp.LeftHandDisplacement = state.LeftHandDisplacement;
+                ent.Comp.RightHandDisplacement = state.RightHandDisplacement;
+
+                UpdateAllHandVisuals((ent.Owner, ent.Comp));
+            }
 
             _stripSys.UpdateUi(ent);
         }
@@ -330,6 +344,22 @@ namespace Content.Client.Hands.Systems
             }
 
             RaiseLocalEvent(held, new HeldVisualsUpdatedEvent(ent, revealedLayers), true);
+        }
+
+        public void UpdateAllHandVisuals(Entity<HandsComponent?> ent)
+        {
+            if (!Resolve(ent, ref ent.Comp, false))
+                return;
+
+            foreach (var hand in ent.Comp.Hands)
+            {
+                var held = GetHeldItem(ent.Owner, hand.Key);
+
+                if (held == null)
+                    return;
+
+                UpdateHandVisuals(ent.Owner, held.Value, hand.Key);
+            }
         }
 
         private void OnVisualsChanged(EntityUid uid, HandsComponent component, VisualsChangedEvent args)

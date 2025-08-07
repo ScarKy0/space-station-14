@@ -74,9 +74,8 @@ namespace Content.Server.Hands.Systems
 
         private void GetComponentState(EntityUid uid, HandsComponent hands, ref ComponentGetState args)
         {
-            args.State = new HandsComponentState(hands);
+            args.State = new HandsComponentState(hands, hands.HandDisplacement, hands.LeftHandDisplacement, hands.RightHandDisplacement);
         }
-
 
         private void OnExploded(Entity<HandsComponent> ent, ref BeforeExplodeEvent args)
         {
