@@ -1,15 +1,76 @@
 - type: entity
   abstract: true
-  save: false
-  parent: BaseMobSpeciesOrganic
-  id: BaseMobVulpkanin
-  name: Urrrist McVulp
+  id: BaseMobVulpkaninAppearance
   components:
   - type: HumanoidAppearance
     species: Vulpkanin
-  - type: Hunger
-  - type: Inventory # Allows vulps to wear properly shaped helmets and other clothing. When displacement maps happen this might need to change.
+    hideLayersOnEquip:
+    - Snout
+    - HeadTop
+    - HeadSide
+    markingsDisplacement:
+      Hair:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: hair
+  - type: Inventory
     speciesId: vulpkanin
+    displacements:
+      jumpsuit:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: jumpsuit
+      back:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: back
+      outerClothing:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: outerwear
+      gloves:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: hand
+      shoes:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: shoes
+      head:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: head
+      neck:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: neck
+      eyes:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: eyes
+      belt:
+        sizeMaps:
+          32:
+            sprite: Mobs/Species/Vulpkanin/displacement.rsi
+            state: belt
+
+- type: entity
+  abstract: true
+  save: false
+  parent: [BaseMobSpeciesOrganic, BaseMobVulpkaninAppearance]
+  id: BaseMobVulpkanin
+  name: Urrrist McVulp
+  components:
+  - type: Hunger
   - type: Thirst
   - type: MessyDrinker
     spillChance: 0.25
@@ -110,11 +171,8 @@
       visible: false
 
 - type: entity
-  parent: BaseSpeciesDummy
+  parent: [BaseSpeciesDummy, BaseMobVulpkaninAppearance]
   id: MobVulpkaninDummy
   name: Vulpkanin Dummy
   categories: [ HideSpawnMenu ]
-  description: A dummy vulpkanin meant to be used in character setup.
-  components:
-  - type: HumanoidAppearance
-    species: Vulpkanin
+  description: A dummy Vulpkanin meant to be used in character setup.
