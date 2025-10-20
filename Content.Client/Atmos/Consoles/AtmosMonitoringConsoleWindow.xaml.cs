@@ -89,8 +89,8 @@ public sealed partial class AtmosMonitoringConsoleWindow : FancyWindow
         if (!_entManager.TryGetComponent<AtmosMonitoringConsoleComponent>(_owner, out var console))
             return;
 
-        NavMap.TileColor = console.NavMapTileColor;
-        NavMap.WallColor = console.NavMapWallColor;
+        NavMap.NavData.TileColor = console.NavMapTileColor;
+        NavMap.NavData.WallColor = console.NavMapWallColor;
 
         // Initalize
         UpdateUI(consoleCoords, Array.Empty<AtmosMonitoringConsoleEntry>());

@@ -26,7 +26,6 @@ public sealed partial class AtmosMonitoringConsoleNavMapControl : NavMapControl
     private readonly Color _unfocusedPipeNetColor = Color.DimGray;
 
     private List<AtmosMonitoringConsoleLine> _atmosPipeNetwork = new();
-    private Dictionary<Color, Color> _sRGBLookUp = new Dictionary<Color, Color>();
 
     // Look up tables for merging continuous lines. Indexed by line color
     private Dictionary<Color, Dictionary<Vector2i, Vector2i>> _horizLines = new();
@@ -34,15 +33,13 @@ public sealed partial class AtmosMonitoringConsoleNavMapControl : NavMapControl
     private Dictionary<Color, Dictionary<Vector2i, Vector2i>> _vertLines = new();
     private Dictionary<Color, Dictionary<Vector2i, Vector2i>> _vertLinesReversed = new();
 
-    public AtmosMonitoringConsoleNavMapControl() : base()
+    public AtmosMonitoringConsoleNavMapControl()
     {
         PostWallDrawingAction += DrawAllPipeNetworks;
     }
 
-    protected override void UpdateNavMap()
+    private void UpdateNavMap()
     {
-        base.UpdateNavMap();
-
         if (!_entManager.TryGetComponent<AtmosMonitoringConsoleComponent>(Owner, out var console))
             return;
 
@@ -227,9 +224,9 @@ public sealed partial class AtmosMonitoringConsoleNavMapControl : NavMapControl
                         new Vector2(grid.TileSize * 0f, -grid.TileSize * layerFraction) : origin;
 
                     // Scale up the vectors and convert to vector2i so we can merge them
-                    AddOrUpdateNavMapLine(ConvertVector2ToVector2i(tile + horizLineOrigin, ScaleModifier),
+                    NavData.AddOrUpdateNavMapLine(ConvertVector2ToVector2i(tile + horizLineOrigin, ScaleModifier),
                         ConvertVector2ToVector2i(tile + horizLineTerminus, ScaleModifier), horizLines, horizLinesReversed);
-                    AddOrUpdateNavMapLine(ConvertVector2ToVector2i(tile + vertLineOrigin, ScaleModifier),
+                    NavData.AddOrUpdateNavMapLine(ConvertVector2ToVector2i(tile + vertLineOrigin, ScaleModifier),
                         ConvertVector2ToVector2i(tile + vertLineTerminus, ScaleModifier), vertLines, vertLinesReversed);
                 }
             }
@@ -278,11 +275,7 @@ public sealed partial class AtmosMonitoringConsoleNavMapControl : NavMapControl
 
     private Color GetsRGBColor(Color color)
     {
-        if (!_sRGBLookUp.TryGetValue(color, out var sRGB))
-        {
-            sRGB = Color.ToSrgb(color);
-            _sRGBLookUp[color] = sRGB;
-        }
+        var sRGB = Color.ToSrgb(color);
 
         return sRGB;
     }

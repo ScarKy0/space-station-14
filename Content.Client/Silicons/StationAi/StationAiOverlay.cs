@@ -1,5 +1,6 @@
 using System.Numerics;
 using Content.Client.Graphics;
+using Content.Client.Pinpointer;
 using Content.Shared.Silicons.StationAi;
 using Robust.Client.Graphics;
 using Robust.Client.Player;
@@ -28,6 +29,8 @@ public sealed class StationAiOverlay : Overlay
     private readonly HashSet<Vector2i> _visibleTiles = new();
 
     private readonly OverlayResourceCache<CachedResources> _resources = new();
+
+    protected NavMapData _data = new();
 
     private float _updateRate = 1f / 30f;
     private float _accumulator;
@@ -72,11 +75,12 @@ public sealed class StationAiOverlay : Overlay
             if (_accumulator <= 0f)
             {
                 _accumulator = MathF.Max(0f, _accumulator + _updateRate);
+                _data.UpdateNavMap((gridUid, grid));
                 _visibleTiles.Clear();
                 _entManager.System<StationAiVisionSystem>().GetView((gridUid, broadphase, grid), worldBounds, _visibleTiles);
             }
 
-            var gridMatrix = xforms.GetWorldMatrix(gridUid);
+            var (_, _, gridMatrix, gridInvMatrix) = xforms.GetWorldPositionRotationMatrixWithInv(gridUid);
             var matty =  Matrix3x2.Multiply(gridMatrix, invMatrix);
 
             // Draw visible tiles to stencil
@@ -97,11 +101,12 @@ public sealed class StationAiOverlay : Overlay
             () =>
             {
                 worldHandle.SetTransform(invMatrix);
-                var shader = _proto.Index(CameraStaticShader).Instance();
-                worldHandle.UseShader(shader);
-                worldHandle.DrawRect(worldBounds, Color.White);
-            },
-            Color.Black);
+                worldHandle.DrawRect(worldBounds, Color.Black);
+                worldHandle.SetTransform(matty);
+                var localAABB = gridInvMatrix.TransformBox(worldBounds);
+
+                _data.Draw(worldHandle, vec => new Vector2(vec.X, -vec.Y), localAABB);
+            }, Color.Transparent);
         }
         // Not on a grid
         else
