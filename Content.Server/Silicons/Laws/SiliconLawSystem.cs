@@ -25,10 +25,11 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
     {
         base.Initialize();
 
-        SubscribeLocalEvent<SiliconLawBoundComponent, MindAddedMessage>(OnMindAdded);
+        SubscribeLocalEvent<SiliconLawProviderComponent, MindAddedMessage>(OnMindAdded);
+        SubscribeLocalEvent<SiliconLawProviderComponent, MindRemovedMessage>(OnMindRemoved);
     }
 
-    private void OnMindAdded(Entity<SiliconLawBoundComponent> ent, ref MindAddedMessage args)
+    private void OnMindAdded(Entity<SiliconLawProviderComponent> ent, ref MindAddedMessage args)
     {
         if (!TryComp<ActorComponent>(ent, out var actor))
             return;
@@ -37,15 +38,22 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
         var wrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", msg));
         _chatManager.ChatMessageToOne(ChatChannel.Server, msg, wrappedMessage, default, false, actor.PlayerSession.Channel, colorOverride: Color.FromHex("#5ed7aa"));
 
-        if (!TryComp<SiliconLawProviderComponent>(ent, out var lawcomp))
+        if (!ent.Comp.Subverted)
             return;
 
-        if (!lawcomp.Subverted)
-            return;
+        EnsureSubvertedSiliconRole(args.Mind);
 
         var modifedLawMsg = Loc.GetString("laws-notify-subverted");
         var modifiedLawWrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", modifedLawMsg));
         _chatManager.ChatMessageToOne(ChatChannel.Server, modifedLawMsg, modifiedLawWrappedMessage, default, false, actor.PlayerSession.Channel, colorOverride: Color.Red);
+    }
+
+    private void OnMindRemoved(Entity<SiliconLawProviderComponent> ent, ref MindRemovedMessage args)
+    {
+        if (!ent.Comp.Subverted)
+            return;
+
+        RemoveSubvertedSiliconRole(args.Mind);
     }
 
     public override void NotifyLawsChanged(EntityUid uid, SoundSpecifier? cue = null)
@@ -69,7 +77,7 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
         if (!TryComp<SiliconLawProviderComponent>(args.Entity, out var provider))
             return;
 
-        var lawset = provider.Lawset ?? GetLawset(provider.Laws);
+        var lawset = provider.Lawset;
 
         var query = EntityManager.CompRegistryQueryEnumerator(ent.Comp.Components);
 
@@ -88,7 +96,7 @@ public sealed class LawsCommand : ToolshedCommand
     [CommandImplementation("list")]
     public IEnumerable<EntityUid> List()
     {
-        var query = EntityManager.EntityQueryEnumerator<SiliconLawBoundComponent>();
+        var query = EntityManager.EntityQueryEnumerator<SiliconLawProviderComponent>();
         while (query.MoveNext(out var uid, out _))
         {
             yield return uid;
