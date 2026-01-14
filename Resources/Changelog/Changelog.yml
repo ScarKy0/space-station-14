@@ -1,55 +1,4 @@
 ﻿Entries:
-- author: perryprog
-  changes:
-  - message: Items and borgs can no longer become stuck in mechs.
-    type: Fix
-  id: 8886
-  time: '2025-08-26T10:29:13.0000000+00:00'
-  url: https://github.com/space-wizards/space-station-14/pull/37942
-- author: beck-thompson
-  changes:
-  - message: You can now select no lock when locking syndicate items
-    type: Tweak
-  id: 8887
-  time: '2025-08-26T14:18:10.0000000+00:00'
-  url: https://github.com/space-wizards/space-station-14/pull/39532
-- author: slarticodefast
-  changes:
-  - message: Removed the dynamic game mode from player votes.
-    type: Tweak
-  id: 8888
-  time: '2025-08-26T19:42:18.0000000+00:00'
-  url: https://github.com/space-wizards/space-station-14/pull/39902
-- author: FungiFellow
-  changes:
-  - message: Engiborg can no longer pickup AI lawboards
-    type: Fix
-  id: 8889
-  time: '2025-08-26T20:59:23.0000000+00:00'
-  url: https://github.com/space-wizards/space-station-14/pull/39730
-- author: beck-thompson
-  changes:
-  - message: Locked chameleon storage items can now still be used as storage even
-      when locked.
-    type: Fix
-  id: 8890
-  time: '2025-08-26T21:50:19.0000000+00:00'
-  url: https://github.com/space-wizards/space-station-14/pull/39784
-- author: StormyDragon
-  changes:
-  - message: Modular Grenades with a chemical payload now correctly wait out their
-      delay before activating.
-    type: Tweak
-  id: 8891
-  time: '2025-08-26T22:26:13.0000000+00:00'
-  url: https://github.com/space-wizards/space-station-14/pull/39905
-- author: ToastEnjoyer
-  changes:
-  - message: Wizards can no longer teleport to the arrivals terminal
-    type: Fix
-  id: 8892
-  time: '2025-08-26T23:43:50.0000000+00:00'
-  url: https://github.com/space-wizards/space-station-14/pull/39901
 - author: Hitlinemoss
   changes:
   - message: Clipboards can now be printed by autolathes.
@@ -3907,3 +3856,64 @@
   id: 9389
   time: '2026-01-13T18:30:44.0000000+00:00'
   url: https://github.com/space-wizards/space-station-14/pull/42392
+- author: SirWarock
+  changes:
+  - message: Cyborg Chassis can now be pried open when the cyborg is in critical state!
+    type: Add
+  - message: Cyborg Chassis' maintenance panel now needs to be opened with a screwdriver
+      again.
+    type: Tweak
+  id: 9390
+  time: '2026-01-13T22:21:52.0000000+00:00'
+  url: https://github.com/space-wizards/space-station-14/pull/42319
+- author: SapphicOverload
+  changes:
+  - message: Fixed tritium fires consuming either 18 times more oxygen and making
+      10 times more water vapor than intended or consuming no oxygen at all, depending
+      on whether there is more or less oxygen than tritium respectively.
+    type: Fix
+  id: 9391
+  time: '2026-01-13T22:35:55.0000000+00:00'
+  url: https://github.com/space-wizards/space-station-14/pull/41870
+- author: ArtisticRoomba
+  changes:
+  - message: The frezon production conversion rate has been increased. Tritium combines
+      with oxygen to make frezon at a 1:50 ratio instead of a 1:8 ratio. This means
+      you'll be making more frezon for less tritium inputted in a standard frezon
+      setup.
+    type: Tweak
+  id: 9392
+  time: '2026-01-13T23:41:36.0000000+00:00'
+  url: https://github.com/space-wizards/space-station-14/pull/42400
+- author: ArtisticRoomba
+  changes:
+  - message: The tritiumfire reaction now properly limits the amount of tritium burned
+      by the limiting gas in the mix instead of limiting by which gas is in excess.
+    type: Fix
+  id: 9393
+  time: '2026-01-14T05:21:21.0000000+00:00'
+  url: https://github.com/space-wizards/space-station-14/pull/42407
+- author: skrybl
+  changes:
+  - message: Changed the sprite for the janitorial maid uniform.
+    type: Tweak
+  id: 9394
+  time: '2026-01-14T15:03:04.0000000+00:00'
+  url: https://github.com/space-wizards/space-station-14/pull/38335
+- author: SlamBamActionman
+  changes:
+  - message: Added a target station map inside the LoneOp's Striker shuttle.
+    type: Add
+  id: 9395
+  time: '2026-01-14T20:04:37.0000000+00:00'
+  url: https://github.com/space-wizards/space-station-14/pull/42376
+- author: Samuka
+  changes:
+  - message: Xenoborgs no longer drop core pinpointers.
+    type: Remove
+  - message: Xenoborgs now drop core pinpointer pieces. With 4 you can craft a repaired
+      core pinpointer!
+    type: Add
+  id: 9396
+  time: '2026-01-14T20:36:12.0000000+00:00'
+  url: https://github.com/space-wizards/space-station-14/pull/42295
