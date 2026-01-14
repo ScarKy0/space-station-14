@@ -550,7 +550,7 @@
   - type: ContainerFill
     containers:
       borg_brain:
-        - PositronicBrain
+        - PositronicBrainSyndicate
       borg_module:
         - BorgModuleOperative
         - BorgModuleL6C
@@ -819,7 +819,7 @@
   - type: ContainerFill
     containers:
       borg_brain:
-      - PositronicBrain
+      - PositronicBrainSyndicate
       borg_module:
       - BorgModuleOperative
       - BorgModuleC20r
