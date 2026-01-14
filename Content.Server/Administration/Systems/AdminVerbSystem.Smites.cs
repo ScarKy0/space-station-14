@@ -1008,7 +1008,7 @@ public sealed partial class AdminVerbSystem
                 _uiSystem.SetUi((args.Target, userInterfaceComp), SiliconLawsUiKey.Key, new InterfaceData(SiliconLawBoundUserInterface));
 
                 EnsureComp<SiliconLawProviderComponent>(args.Target);
-                _siliconLawSystem.SetLaws(_siliconLawSystem.GetLawset(_crewsimovLawset).Laws, args.Target);
+                _siliconLawSystem.SetProviderLaws(args.Target, _siliconLawSystem.GetLawset(_crewsimovLawset).Laws);
                 _actions.AddAction(args.Target, _actionViewLawsProtoId);
 
                 if (_mindSystem.TryGetMind(args.Target, out var mindId, out _))
