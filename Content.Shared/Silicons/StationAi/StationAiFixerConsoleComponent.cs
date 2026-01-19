@@ -24,6 +24,12 @@ public sealed partial class StationAiFixerConsoleComponent : Component
     public TimeSpan PurgeDuration = TimeSpan.FromSeconds(30);
 
     /// <summary>
+    /// Determines how long law reset takes to complete (in seconds).
+    /// </summary>
+    [DataField]
+    public TimeSpan LawResetDuration = TimeSpan.FromSeconds(10);
+
+    /// <summary>
     /// The number of stages that a console action (repair or purge)
     /// progresses through before it concludes. Each stage has an equal
     /// duration. The appearance data of the entity is updated with
@@ -75,6 +81,12 @@ public sealed partial class StationAiFixerConsoleComponent : Component
     public SoundSpecifier? PurgeFinishedSound = new SoundPathSpecifier("/Audio/Machines/beep.ogg");
 
     /// <summary>
+    /// Sound clip that is played when a repair is completed.
+    /// </summary>
+    [DataField]
+    public SoundSpecifier? LawResetFinishedSound = new SoundPathSpecifier("/Audio/Items/beep.ogg");
+
+    /// <summary>
     /// The name of the console slot which is used to contain station AI holders.
     /// </summary>
     [DataField]
@@ -117,6 +129,7 @@ public enum StationAiFixerConsoleAction
     Eject,
     Repair,
     Purge,
+    LawReset,
     Cancel,
 }
 

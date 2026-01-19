@@ -51,17 +51,20 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
         CancelButton.OnButtonDown += _ => OnSendStationAiFixerConsoleMessage(StationAiFixerConsoleAction.Cancel);
         EjectButton.OnButtonDown += _ => OnSendStationAiFixerConsoleMessage(StationAiFixerConsoleAction.Eject);
         RepairButton.OnButtonDown += _ => OnSendStationAiFixerConsoleMessage(StationAiFixerConsoleAction.Repair);
+        LawResetButton.OnButtonDown += _ => OnSendStationAiFixerConsoleMessage(StationAiFixerConsoleAction.LawReset);
         PurgeButton.OnButtonDown += _ => OnOpenConfirmationDialog();
 
         CancelButton.Label.HorizontalAlignment = HAlignment.Left;
         EjectButton.Label.HorizontalAlignment = HAlignment.Left;
         RepairButton.Label.HorizontalAlignment = HAlignment.Left;
         PurgeButton.Label.HorizontalAlignment = HAlignment.Left;
+        LawResetButton.Label.HorizontalAlignment = HAlignment.Left;
 
         CancelButton.Label.Margin = new Thickness(40, 0, 0, 0);
         EjectButton.Label.Margin = new Thickness(40, 0, 0, 0);
         RepairButton.Label.Margin = new Thickness(40, 0, 0, 0);
         PurgeButton.Label.Margin = new Thickness(40, 0, 0, 0);
+        LawResetButton.Label.Margin = new Thickness(40, 0, 0, 0);
     }
 
     public void OnSendStationAiFixerConsoleMessage(StationAiFixerConsoleAction action)
@@ -153,6 +156,7 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
         EjectButton.Disabled = !stationAiHolderInserted;
         RepairButton.Disabled = !stationAiHolderInserted || stationAiState != StationAiState.Dead;
         PurgeButton.Disabled = !stationAiHolderInserted || stationAiState == StationAiState.Empty;
+        LawResetButton.Disabled = !stationAiHolderInserted;
 
         // Update progress bar
         if (ActionProgressScreen.Visible)
@@ -161,9 +165,13 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
 
     public void UpdateProgressBar(Entity<StationAiFixerConsoleComponent> ent)
     {
-        ActionInProgressLabel.Text = ent.Comp.ActionType == StationAiFixerConsoleAction.Repair ?
-            Loc.GetString("station-ai-fixer-console-window-action-progress-repair") :
-            Loc.GetString("station-ai-fixer-console-window-action-progress-purge");
+        ActionInProgressLabel.Text = ent.Comp.ActionType switch
+        {
+            StationAiFixerConsoleAction.Repair => Loc.GetString("station-ai-fixer-console-window-action-progress-repair"),
+            StationAiFixerConsoleAction.Purge => Loc.GetString("station-ai-fixer-console-window-action-progress-purge"),
+            StationAiFixerConsoleAction.LawReset => Loc.GetString("station-ai-fixer-console-window-action-progress-law-reset"),
+            _ => Loc.GetString("station-ai-fixer-console-window-action-progress-default")
+        };
 
         var fullTimeSpan = ent.Comp.ActionEndTime - ent.Comp.ActionStartTime;
         var remainingTimeSpan = ent.Comp.ActionEndTime - _timing.CurTime;

@@ -1710,10 +1710,9 @@
         lockedFailPopup: station-ai-fixer-console-is-locked
         whitelistFailPopup: station-ai-fixer-console-station-ai-holder-required
         whitelist:
-          requireAll: true
           components:
           - StationAiHolder
-          - Item
+          - BorgBrain
   - type: ContainerContainer
     containers:
       station_ai_holder: !type:ContainerSlot
