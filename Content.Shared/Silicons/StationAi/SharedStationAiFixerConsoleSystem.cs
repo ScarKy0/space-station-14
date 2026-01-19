@@ -311,7 +311,13 @@ public abstract partial class SharedStationAiFixerConsoleSystem : EntitySystem
             return;
         }
 
-        var state = ent.Comp.ActionTarget == null ? StationAiFixerConsoleVisuals.Key : StationAiFixerConsoleVisuals.Full;
+        var target = ent.Comp.ActionTarget;
+        var state = StationAiState.Empty;
+
+        if (TryComp<StationAiCustomizationComponent>(target, out var customization) && !EntityManager.IsQueuedForDeletion(target.Value))
+        {
+            state = customization.State;
+        }
 
         _appearance.SetData(ent, StationAiFixerConsoleVisuals.Key, state.ToString(), appearance);
     }
