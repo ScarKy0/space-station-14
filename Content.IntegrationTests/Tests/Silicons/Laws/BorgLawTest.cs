@@ -5,6 +5,7 @@ using Content.Server.Mind;
 using Content.Shared.Emag.Systems;
 using Content.Shared.Roles;
 using Content.Shared.Roles.Components;
+using Content.Shared.Emag.Components;
 using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Silicons.Laws;
 using Content.Shared.Silicons.Laws.Components;
@@ -14,6 +15,8 @@ using Robust.Shared.Containers;
 using Robust.Shared.GameObjects;
 using Robust.Shared.Map;
 using Robust.Shared.Prototypes;
+using Content.Shared.Containers.ItemSlots;
+using Content.Shared.Silicons.StationAi;
 
 namespace Content.IntegrationTests.Tests.Silicons.Laws;
 
@@ -473,6 +476,93 @@ public sealed class BorgLawTest : InteractionTest
                 entManager.DeleteEntity(brain);
                 entManager.DeleteEntity(user);
                 entManager.DeleteEntity(emag);
+            });
+        }
+
+        await pair.CleanReturnAsync();
+    }
+
+    [Test]
+    public async Task TestBorgLawRestoration()
+    {
+        await using var pair = await PoolManager.GetServerClient();
+        var server = pair.Server;
+
+        var entManager = server.EntMan;
+        var protoManager = server.ProtoMan;
+        var lawSystem = entManager.System<SharedSiliconLawSystem>();
+        var containerSystem = entManager.System<SharedContainerSystem>();
+        var consoleSystem = entManager.System<SharedStationAiFixerConsoleSystem>();
+
+        List<EntityPrototype> brainPrototypes = new();
+
+        await server.WaitPost(() =>
+        {
+            brainPrototypes = protoManager.EnumeratePrototypes<EntityPrototype>()
+                .Where(p => !p.Abstract && p.Components.ContainsKey("BorgBrain") && p.Components.ContainsKey("SiliconLawProvider"))
+                .ToList();
+        });
+
+        foreach (var brainProto in brainPrototypes)
+        {
+            EntityUid brain = default;
+            EntityUid console = default;
+
+            await server.WaitPost(() =>
+            {
+                brain = entManager.SpawnEntity(brainProto.ID, MapCoordinates.Nullspace);
+                console = entManager.SpawnEntity("StationAiFixerComputer", MapCoordinates.Nullspace);
+            });
+
+            await server.WaitAssertion(() =>
+            {
+                if (!entManager.TryGetComponent<SiliconLawProviderComponent>(brain, out var provider))
+                {
+                    Assert.Fail($"Brain {brainProto.ID} missing SiliconLawProviderComponent");
+                    return;
+                }
+
+                if (!entManager.TryGetComponent<StationAiFixerConsoleComponent>(console, out var consoleComp))
+                {
+                    Assert.Fail("Console missing StationAiFixerConsoleComponent");
+                    return;
+                }
+
+                // 1. Modify laws (remove, edit, add)
+                var laws = provider.Lawset.Laws.ToList();
+                if (laws.Count > 0)
+                    laws.RemoveAt(0); // Remove
+
+                if (laws.Count > 0)
+                    laws[0] = new SiliconLaw { LawString = "Modified Law", Order = 1 }; // Edit
+
+                laws.Add(new SiliconLaw { LawString = "New Law", Order = 99 }); // Add
+
+                lawSystem.SetProviderLaws(brain, laws);
+                entManager.AddComponent<EmaggedComponent>(brain);
+
+                // 2. Put brain in console
+                var itemSlots = entManager.System<ItemSlotsSystem>();
+                itemSlots.TryGetSlot(console, consoleComp.StationAiHolderSlot, out var slot);
+                containerSystem.Insert(brain, slot!.ContainerSlot!);
+
+                // 3. Reset laws
+                consoleSystem.StartAction((console, consoleComp), StationAiFixerConsoleAction.LawReset);
+                consoleSystem.FinalizeAction((console, consoleComp));
+
+                // 4. Verify laws match default laws
+                var defaultLaws = lawSystem.GetLawset(provider.Laws).Laws;
+                var currentLaws = provider.Lawset.Laws;
+
+                if (!LawsMatch(defaultLaws, currentLaws))
+                {
+                    Assert.Fail($"Laws for {brainProto.ID} do not match default laws after restoration");
+                }
+
+                Assert.That(entManager.HasComponent<EmaggedComponent>(brain), Is.False, $"Emagged not removed for {brainProto.ID}");
+
+                entManager.DeleteEntity(brain);
+                entManager.DeleteEntity(console);
             });
         }
 

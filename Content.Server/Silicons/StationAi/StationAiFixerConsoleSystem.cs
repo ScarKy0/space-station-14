@@ -16,7 +16,7 @@ public sealed partial class StationAiFixerConsoleSystem : SharedStationAiFixerCo
     [Dependency] private readonly SharedAudioSystem _audio = default!;
     [Dependency] private readonly SharedPopupSystem _popup = default!;
 
-    protected override void FinalizeAction(Entity<StationAiFixerConsoleComponent> ent)
+    public override void FinalizeAction(Entity<StationAiFixerConsoleComponent> ent)
     {
         if (IsActionInProgress(ent) && ent.Comp.ActionTarget != null)
         {

@@ -9,7 +9,7 @@ station-ai-fixer-console-purge-successful = Purge complete. AI successfully dele
 station-ai-fixer-console-law-reset-successful = Factory reset complete. Laws successfully restored.
 
 # UI
-station-ai-fixer-console-window = AI restoration console
+station-ai-fixer-console-window = silicon restoration console
 station-ai-fixer-console-window-no-station-ai = No AI detected
 station-ai-fixer-console-window-no-station-ai-status = Waiting
 station-ai-fixer-console-window-station-ai-online = Online

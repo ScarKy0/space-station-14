@@ -24,7 +24,7 @@ public abstract partial class SharedSiliconLawSystem
     /// Removes the subverted silicon role from a mind.
     /// </summary>
     /// <param name="mindId">The ID of the mind.</param>
-    protected void RemoveSubvertedSiliconRole(EntityUid mindId)
+    public void RemoveSubvertedSiliconRole(EntityUid mindId)
     {
         if (_roles.MindHasRole<SubvertedSiliconRoleComponent>(mindId))
             _roles.MindRemoveRole<SubvertedSiliconRoleComponent>(mindId);
@@ -295,5 +295,18 @@ public abstract partial class SharedSiliconLawSystem
     public virtual void NotifyLaws(EntityUid uid, SoundSpecifier? cue = null)
     {
 
+    }
+
+    /// <summary>
+    /// Resets the laws of a law provider to its default lawset.
+    /// Also resets the subverted flag.
+    /// </summary>
+    public void ResetLawProvider(Entity<SiliconLawProviderComponent?> ent)
+    {
+        if (!Resolve(ent, ref ent.Comp))
+            return;
+
+        ent.Comp.Subverted = false;
+        SetProviderLaws(ent, GetLawset(ent.Comp.Laws).Laws);
     }
 }

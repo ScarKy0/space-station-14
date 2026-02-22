@@ -3,6 +3,8 @@
   id: BaseBorgBrain
   abstract: true
   components:
+  - type: Physics
+    bodyType: KinematicController
   - type: BorgBrain
   - type: BlockMovement
   - type: Examiner

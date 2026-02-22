@@ -25,6 +25,7 @@
 
                         <!-- AI portrait -->
                         <AnimatedTextureRect Name="StationAiPortraitTexture" VerticalAlignment="Center" SetSize="128 128" />
+                        <SpriteView Name="StationAiPortraitView" VerticalAlignment="Center" SetSize="128 128" Visible="False" />
                     </BoxContainer>
                 </PanelContainer>
 
