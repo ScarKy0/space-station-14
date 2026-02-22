@@ -102,7 +102,6 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
         var isLocked = _entManager.TryGetComponent<LockComponent>(_owner, out var lockable) && lockable.Locked;
 
         var stationAiHolderInserted = _stationAiFixerConsole.TryGetStationAiHolder((_owner.Value, stationAiFixerConsole), out var holder);
-        var isIntellicard = _entManager.HasComponent<IntellicardComponent>(holder);
         var stationAi = stationAiFixerConsole.ActionTarget;
         var isStationAiHolder = _entManager.HasComponent<StationAiHolderComponent>(stationAi);
         var isBorgBrain = _entManager.HasComponent<BorgBrainComponent>(stationAi);
@@ -147,7 +146,7 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
 
             _statusColors.TryGetValue(stationAiState, out statusColor);
         }
-        else if (isBorgBrain && !isIntellicard && stationAi != null)
+        else if (isBorgBrain && !isStationAiHolder && stationAi != null)
         {
             StationAiStatusLabel.Text = Loc.GetString("station-ai-fixer-console-window-station-ai-online");
             _statusColors.TryGetValue(StationAiState.Occupied, out statusColor);
@@ -161,9 +160,9 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
             _statusColors.TryGetValue(StationAiState.Occupied, out statusColor);
         }
 
-        if (_currentPortrait == null || !_currentPortrait.Equals(portrait) || (isBorgBrain && !isIntellicard && _currentPortraitEntity != stationAi))
+        if (_currentPortrait == null || !_currentPortrait.Equals(portrait) || (isBorgBrain && !isStationAiHolder && _currentPortraitEntity != stationAi))
         {
-            if (isBorgBrain && !isIntellicard && stationAi != null)
+            if (isBorgBrain && !isStationAiHolder && stationAi != null)
             {
                 StationAiPortraitTexture.Visible = false;
                 StationAiPortraitView.Visible = true;
