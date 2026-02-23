@@ -47,8 +47,8 @@ public abstract partial class SharedStationAiFixerConsoleSystem : EntitySystem
         SubscribeLocalEvent<StationAiFixerConsoleComponent, ExaminedEvent>(OnExamined);
 
         SubscribeLocalEvent<StationAiCustomizationComponent, StationAiCustomizationStateChanged>(OnStationAiCustomizationStateChanged);
-        SubscribeLocalEvent<StationAiHeldComponent, EntGotInsertedIntoContainerMessage>(OnGotInserted);
-        SubscribeLocalEvent<StationAiHeldComponent, EntGotRemovedFromContainerMessage>(OnGotRemoved);
+        SubscribeLocalEvent<StationAiCustomizationComponent, EntGotInsertedIntoContainerMessage>(OnGotInserted);
+        SubscribeLocalEvent<StationAiCustomizationComponent, EntGotRemovedFromContainerMessage>(OnGotRemoved);
         SubscribeLocalEvent<BorgBrainComponent, EntGotInsertedIntoContainerMessage>(OnGotInserted);
         SubscribeLocalEvent<BorgBrainComponent, EntGotRemovedFromContainerMessage>(OnGotRemoved);
     }
@@ -163,7 +163,7 @@ public abstract partial class SharedStationAiFixerConsoleSystem : EntitySystem
                 PurgeStationAi(ent, args.Actor);
                 break;
             case StationAiFixerConsoleAction.LawReset:
-                LawRestartStationAi(ent, args.Actor);
+                LawResetStationAi(ent, args.Actor);
                 break;
             case StationAiFixerConsoleAction.Cancel:
                 CancelAction(ent, args.Actor);
@@ -228,7 +228,7 @@ public abstract partial class SharedStationAiFixerConsoleSystem : EntitySystem
         StartAction(ent, StationAiFixerConsoleAction.Purge);
     }
 
-    private void LawRestartStationAi(Entity<StationAiFixerConsoleComponent> ent, EntityUid user)
+    private void LawResetStationAi(Entity<StationAiFixerConsoleComponent> ent, EntityUid user)
     {
         if (ent.Comp.ActionTarget == null)
             return;

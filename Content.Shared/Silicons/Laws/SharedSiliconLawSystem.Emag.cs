@@ -56,7 +56,14 @@ public abstract partial class SharedSiliconLawSystem
 
         // Check if provider has EmagSiliconLawComponent
         // We pass the chassis to check the panel
-        if (!CanBeEmagged(providerUid, args.UserUid, out var reason, out var emagLawcomp, ent.Owner))
+        if (!CanBeEmagged(
+                providerUid,
+                args.UserUid,
+                out var reason,
+                out var emagLawcomp,
+                ent.Owner
+                )
+            )
         {
             _popup.PopupClient(reason, ent, args.UserUid);
             return;

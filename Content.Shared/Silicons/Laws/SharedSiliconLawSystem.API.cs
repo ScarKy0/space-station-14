@@ -232,7 +232,7 @@ public abstract partial class SharedSiliconLawSystem
     }
 
     /// <summary>
-    /// Unlinks the lawbound entity from itss provider.
+    /// Unlinks the lawbound entity from its provider.
     /// Leaves the laws as they were before unlinking.
     /// </summary>
     /// <param name="ent">The lawbound entity.</param>

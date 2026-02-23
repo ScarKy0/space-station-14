@@ -101,9 +101,8 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
         var ent = (_owner.Value, stationAiFixerConsole);
         var isLocked = _entManager.TryGetComponent<LockComponent>(_owner, out var lockable) && lockable.Locked;
 
-        var stationAiHolderInserted = _stationAiFixerConsole.TryGetStationAiHolder((_owner.Value, stationAiFixerConsole), out var holder);
         var stationAi = stationAiFixerConsole.ActionTarget;
-        var isStationAiHolder = _entManager.HasComponent<StationAiHolderComponent>(stationAi);
+        var hasStationAiCustomization = _entManager.HasComponent<StationAiCustomizationComponent>(stationAi);
         var isBorgBrain = _entManager.HasComponent<BorgBrainComponent>(stationAi);
         var stationAiState = StationAiState.Empty;
 
@@ -146,12 +145,12 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
 
             _statusColors.TryGetValue(stationAiState, out statusColor);
         }
-        else if (isBorgBrain && !isStationAiHolder && stationAi != null)
+        else if (isBorgBrain && !hasStationAiCustomization && stationAi != null)
         {
             StationAiStatusLabel.Text = Loc.GetString("station-ai-fixer-console-window-station-ai-online");
             _statusColors.TryGetValue(StationAiState.Occupied, out statusColor);
         }
-        else if (stationAi != null && !isStationAiHolder)
+        else if (stationAi != null && !hasStationAiCustomization)
         {
             if (_entManager.TryGetComponent<MetaDataComponent>(stationAi, out var metaData) && metaData.EntityPrototype != null)
                 portrait = new SpriteSpecifier.EntityPrototype(metaData.EntityPrototype.ID);
@@ -160,9 +159,9 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
             _statusColors.TryGetValue(StationAiState.Occupied, out statusColor);
         }
 
-        if (_currentPortrait == null || !_currentPortrait.Equals(portrait) || (isBorgBrain && !isStationAiHolder && _currentPortraitEntity != stationAi))
+        if (_currentPortrait == null || !_currentPortrait.Equals(portrait) || (isBorgBrain && !hasStationAiCustomization && _currentPortraitEntity != stationAi))
         {
-            if (isBorgBrain && !isStationAiHolder && stationAi != null)
+            if (isBorgBrain && !hasStationAiCustomization && stationAi != null)
             {
                 StationAiPortraitTexture.Visible = false;
                 StationAiPortraitView.Visible = true;
@@ -195,7 +194,7 @@ public sealed partial class StationAiFixerConsoleWindow : FancyWindow
 
         // Update buttons
         EjectButton.Disabled = stationAi == null;
-        RepairButton.Disabled = stationAi == null || (isStationAiHolder && stationAiState != StationAiState.Dead);
+        RepairButton.Disabled = stationAi == null || (hasStationAiCustomization && stationAiState != StationAiState.Dead);
         PurgeButton.Disabled = stationAi == null;
         LawResetButton.Disabled = stationAi == null;
 
