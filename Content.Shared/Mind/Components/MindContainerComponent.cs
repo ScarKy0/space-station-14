@@ -33,23 +33,26 @@ public abstract class MindEvent : EntityEventArgs
 {
     public readonly Entity<MindComponent> Mind;
     public readonly Entity<MindContainerComponent> Container;
-    public readonly EntityUid? PreviousEntity; // The previous entity, in case the mind is transferred between two.
+    public readonly EntityUid? TransferEntity; // The target entity in case the mind is being transferred. In MindRemoved it means the entity that is being transferred to, and in MindAdded it means the previous entity.
 
-    public MindEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
+    public MindEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? transferEntity)
     {
         Mind = mind;
         Container = container;
-        PreviousEntity = previousEntity;
+        TransferEntity = transferEntity;
     }
 }
 
 /// <summary>
 /// Event raised directed at a mind-container when a mind gets removed.
 /// </summary>
+/// <remarks>
+/// Called after the owned entity is already set to null. Use transferEntity if you need to know it.
+/// </remarks>
 public sealed class MindRemovedMessage : MindEvent
 {
-    public MindRemovedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
-        : base(mind, container, previousEntity)
+    public MindRemovedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? transferEntity)
+        : base(mind, container, transferEntity)
     {
     }
 }
@@ -57,10 +60,13 @@ public sealed class MindRemovedMessage : MindEvent
 /// <summary>
 /// Event raised directed at a mind when it gets removed from a mind-container.
 /// </summary>
+/// <remarks>
+/// Called after the owned entity is already set to null. Use transferEntity if you need to know it.
+/// </remarks>
 public sealed class MindGotRemovedEvent : MindEvent
 {
-    public MindGotRemovedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
-        : base(mind, container, previousEntity)
+    public MindGotRemovedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? transferEntity)
+        : base(mind, container, transferEntity)
     {
     }
 }
@@ -68,10 +74,13 @@ public sealed class MindGotRemovedEvent : MindEvent
 /// <summary>
 /// Event raised directed at a mind-container when a mind gets added.
 /// </summary>
+/// <remarks>
+/// Called after the owned entity is already set to the new entity. Use transferEntity if you need access the previous entity.
+/// </remarks>
 public sealed class MindAddedMessage : MindEvent
 {
-    public MindAddedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
-        : base(mind, container, previousEntity)
+    public MindAddedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? transferEntity)
+        : base(mind, container, transferEntity)
     {
     }
 }
@@ -79,10 +88,13 @@ public sealed class MindAddedMessage : MindEvent
 /// <summary>
 /// Event raised directed at a mind when it gets added to a mind-container.
 /// </summary>
+/// <remarks>
+/// Called after the owned entity is already set to the new entity. Use transferEntity if you need access the previous entity.
+/// </remarks>
 public sealed class MindGotAddedEvent : MindEvent
 {
-    public MindGotAddedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
-        : base(mind, container, previousEntity)
+    public MindGotAddedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? transferEntity)
+        : base(mind, container, transferEntity)
     {
     }
 }
