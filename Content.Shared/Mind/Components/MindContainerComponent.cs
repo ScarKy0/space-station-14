@@ -33,11 +33,13 @@ public abstract class MindEvent : EntityEventArgs
 {
     public readonly Entity<MindComponent> Mind;
     public readonly Entity<MindContainerComponent> Container;
+    public readonly EntityUid? PreviousEntity;
 
-    public MindEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container)
+    public MindEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
     {
         Mind = mind;
         Container = container;
+        PreviousEntity = previousEntity;
     }
 }
 
@@ -46,8 +48,8 @@ public abstract class MindEvent : EntityEventArgs
 /// </summary>
 public sealed class MindRemovedMessage : MindEvent
 {
-    public MindRemovedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container)
-        : base(mind, container)
+    public MindRemovedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
+        : base(mind, container, previousEntity)
     {
     }
 }
@@ -57,8 +59,8 @@ public sealed class MindRemovedMessage : MindEvent
 /// </summary>
 public sealed class MindGotRemovedEvent : MindEvent
 {
-    public MindGotRemovedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container)
-        : base(mind, container)
+    public MindGotRemovedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
+        : base(mind, container, previousEntity)
     {
     }
 }
@@ -68,8 +70,8 @@ public sealed class MindGotRemovedEvent : MindEvent
 /// </summary>
 public sealed class MindAddedMessage : MindEvent
 {
-    public MindAddedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container)
-        : base(mind, container)
+    public MindAddedMessage(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
+        : base(mind, container, previousEntity)
     {
     }
 }
@@ -79,8 +81,8 @@ public sealed class MindAddedMessage : MindEvent
 /// </summary>
 public sealed class MindGotAddedEvent : MindEvent
 {
-    public MindGotAddedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container)
-        : base(mind, container)
+    public MindGotAddedEvent(Entity<MindComponent> mind, Entity<MindContainerComponent> container, EntityUid? previousEntity)
+        : base(mind, container, previousEntity)
     {
     }
 }

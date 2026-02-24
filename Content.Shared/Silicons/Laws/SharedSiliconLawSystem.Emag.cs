@@ -87,8 +87,6 @@ public abstract partial class SharedSiliconLawSystem
 
         emagLawcomp.OwnerName = Name(args.UserUid);
 
-        EnsureSubvertedSiliconRole(mindId.Value);
-
         _stunSystem.TryUpdateParalyzeDuration(ent, emagLawcomp.StunTime);
 
         args.Handled = true;
@@ -141,8 +139,6 @@ public abstract partial class SharedSiliconLawSystem
         Dirty(ent, brainProvider);
 
         emagLawcomp.OwnerName = Name(args.UserUid);
-
-        EnsureSubvertedSiliconRole(mindId);
 
         args.Handled = true;
     }

@@ -38,14 +38,14 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
         if (!TryComp<ActorComponent>(ent, out var actor))
             return;
 
+        UpdateSiliconRoles(ent.AsNullable());
+
         var msg = Loc.GetString("laws-notify");
         var wrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", msg));
         _chatManager.ChatMessageToOne(ChatChannel.Server, msg, wrappedMessage, default, false, actor.PlayerSession.Channel, colorOverride: Color.FromHex("#5ed7aa"));
 
         if (!ent.Comp.Subverted)
             return;
-
-        EnsureSubvertedSiliconRole(args.Mind);
 
         var modifedLawMsg = Loc.GetString("laws-notify-subverted");
         var modifiedLawWrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", modifedLawMsg));
@@ -54,10 +54,10 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
 
     private void OnMindRemoved(Entity<SiliconLawBoundComponent> ent, ref MindRemovedMessage args)
     {
-        if (!ent.Comp.Subverted)
+        if (args.PreviousEntity is not { } owner)
             return;
 
-        RemoveSubvertedSiliconRole(args.Mind);
+        UpdateSiliconRoles(owner, args.Mind);
     }
 
     public override void NotifyLawsChanged(EntityUid uid, SoundSpecifier? cue = null)
