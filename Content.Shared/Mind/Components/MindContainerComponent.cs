@@ -75,7 +75,7 @@ public sealed class MindGotRemovedEvent : MindEvent
 /// Event raised directed at a mind-container when a mind gets added.
 /// </summary>
 /// <remarks>
-/// Called after the owned entity is already set to the new entity. Use transferEntity if you need access the previous entity.
+/// Called after the owned entity is already set to the new entity. Use transferEntity if you need access to the previous entity.
 /// </remarks>
 public sealed class MindAddedMessage : MindEvent
 {
@@ -89,7 +89,7 @@ public sealed class MindAddedMessage : MindEvent
 /// Event raised directed at a mind when it gets added to a mind-container.
 /// </summary>
 /// <remarks>
-/// Called after the owned entity is already set to the new entity. Use transferEntity if you need access the previous entity.
+/// Called after the owned entity is already set to the new entity. Use transferEntity if you need access to the previous entity.
 /// </remarks>
 public sealed class MindGotAddedEvent : MindEvent
 {
