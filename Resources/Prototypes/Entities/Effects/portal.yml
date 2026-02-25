@@ -51,7 +51,7 @@
     radius: 3
     energy: 1
     netsync: false
-    
+
 - type: entity
   id: PortalArtifact
   parent: BasePortal
@@ -123,3 +123,76 @@
     volume: -3
     sound:
       path: /Audio/Ambience/anomaly_scary.ogg
+
+- type: entity
+  parent: BasePortal
+  id: BaseXAEWormHolePortal
+  components:
+  - type: Portal
+    arrivalSound: /Audio/Items/hiss.ogg
+    departureSound: /Audio/Items/hiss.ogg
+  - type: AmbientSound
+    enabled: true
+    volume: -5
+    range: 14
+    sound:
+      path: /Audio/Effects/Grenades/Supermatter/supermatter_loop.ogg
+  - type: TimedDespawn
+    lifetime: 15
+
+- type: entity
+  parent: BaseXAEWormHolePortal
+  id: PortalBlackHole
+  name: black hole
+  description: You can't help but wonder what's on the other side.
+  components:
+  - type: Sprite
+    noRot: true
+    sprite: Structures/Machines/gateway.rsi
+    color: Black
+    layers:
+    - state: portal
+  - type: PointLight
+    enabled: true
+    color: "#ffaa44"
+    energy: 8
+    radius: 6
+    softness: 1
+    offset: "0, 0"
+  - type: GravityWell
+    maxRange: 5
+    minRange: 0.25
+    baseRadialAcceleration: 15
+    baseTangentialAcceleration: 5
+    gravPulsePeriod: 0.03
+  - type: SingularityDistortion
+    intensity: 40
+    falloffPower: 1.5
+
+- type: entity
+  parent: BaseXAEWormHolePortal
+  id: PortalWhiteHole
+  name: white hole
+  description: Where is all this junk coming from?
+  components:
+  - type: Sprite
+    noRot: true
+    sprite: Structures/Machines/gateway.rsi
+    color: White
+    layers:
+    - state: portal
+  - type: PointLight
+    enabled: true
+    color: "#ffffff"
+    energy: 8
+    radius: 6
+    softness: 1
+    offset: "0, 0"
+  - type: GravityWell
+    maxRange: 7
+    baseRadialAcceleration: -8
+    baseTangentialAcceleration: -1
+    gravPulsePeriod: 0.03
+  - type: SingularityDistortion
+    intensity: -15
+    falloffPower: 1.5

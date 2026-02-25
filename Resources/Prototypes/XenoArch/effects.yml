@@ -127,6 +127,8 @@
       weight: 4.0
     - id: XenoArtifactEffectCreationGasCarbonDioxide
       weight: 4.0
+    - id: XenoArtifactWormhole
+      weight: 10
 
 - type: entityTable
   id: XenoArtifactEffectsHandheldOnlyTable
@@ -1112,6 +1114,13 @@
   description: Teleportation
   components:
   - type: XAERandomTeleportInvoker
+
+- type: entity
+  id: XenoArtifactWormhole
+  parent: BaseOneTimeXenoArtifactEffect
+  description: Opens a wormhole
+  components:
+  - type: XAERandomPortal
 
 - type: entity
   id: XenoArtifactEmp

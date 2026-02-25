@@ -485,6 +485,8 @@ public abstract class SharedAnomalySystem : EntitySystem
 
         return AnomalyStabilityVisuals.Stable;
     }
+
+    public abstract EntityUid? SpawnOnRandomGridLocation(EntityUid grid, string toSpawn);
 }
 
 [DataRecord]

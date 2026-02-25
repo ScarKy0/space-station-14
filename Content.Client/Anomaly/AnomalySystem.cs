@@ -87,4 +87,9 @@ public sealed partial class AnomalySystem : SharedAnomalySystem
         _sprite.SetScale((ent.Owner, sprite), Vector2.One);
         _sprite.SetColor((ent.Owner, sprite), sprite.Color.WithAlpha(1f));
     }
+
+    public override EntityUid? SpawnOnRandomGridLocation(EntityUid grid, string toSpawn)
+    {
+        return null;
+    }
 }
