@@ -30,7 +30,7 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
         base.Initialize();
 
         SubscribeLocalEvent<SiliconLawBoundComponent, MindAddedMessage>(OnMindAdded);
-        SubscribeLocalEvent<SiliconLawBoundComponent, MindRemovedMessage>(OnMindRemoved);
+        SubscribeLocalEvent<SiliconLawBoundComponent, BeforeMindRemovedMessage>(OnMindRemoved);
     }
 
     private void OnMindAdded(Entity<SiliconLawBoundComponent> ent, ref MindAddedMessage args)
@@ -52,9 +52,9 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
         _chatManager.ChatMessageToOne(ChatChannel.Server, modifedLawMsg, modifiedLawWrappedMessage, default, false, actor.PlayerSession.Channel, colorOverride: Color.Red);
     }
 
-    private void OnMindRemoved(Entity<SiliconLawBoundComponent> ent, ref MindRemovedMessage args)
+    private void OnMindRemoved(Entity<SiliconLawBoundComponent> ent, ref BeforeMindRemovedMessage args)
     {
-        if (args.PreviousEntity is not { } owner)
+        if (args.TransferEntity is not { } owner)
             return;
 
         UpdateSiliconRoles(owner, args.Mind);
