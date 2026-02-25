@@ -15,7 +15,7 @@ public abstract partial class SharedSiliconLawSystem
     /// </summary>
     /// <param name="entity">The entity to check.</param>
     /// /// <param name="entityMind">The mind to update. If null, will use the mind of the provided entity.</param>
-    public void UpdateSiliconRoles(EntityUid entity, EntityUid? entityMind = null)
+    protected void UpdateSiliconRoles(EntityUid entity, EntityUid? entityMind = null)
     {
         // Have we provided a mind to affect the roles for?
         if (entityMind == null)

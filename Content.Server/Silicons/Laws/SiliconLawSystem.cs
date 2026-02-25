@@ -38,7 +38,7 @@ public sealed class SiliconLawSystem : SharedSiliconLawSystem
         if (!TryComp<ActorComponent>(ent, out var actor))
             return;
 
-        UpdateSiliconRoles(ent.AsNullable());
+        UpdateSiliconRoles(ent);
 
         var msg = Loc.GetString("laws-notify");
         var wrappedMessage = Loc.GetString("chat-manager-server-wrap-message", ("message", msg));
