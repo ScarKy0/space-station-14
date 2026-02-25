@@ -47,7 +47,7 @@ public abstract class MindEvent : EntityEventArgs
 /// Event raised directed at a mind-container when a mind gets removed.
 /// </summary>
 /// <remarks>
-/// Called after the owned entity is already set to null. Use transferEntity if you need to know it.
+/// Called after the owned entity is already set to null. TransferEntity is the entity this mind will be added to afterward, if any.
 /// </remarks>
 public sealed class MindRemovedMessage : MindEvent
 {
