@@ -219,10 +219,15 @@ public sealed class MindSystem : SharedMindSystem
         var oldEntity = mind.OwnedEntity;
         if (TryComp(oldEntity, out MindContainerComponent? oldContainer))
         {
-            oldContainer.Mind = null;
-            mind.OwnedEntity = null;
             Entity<MindComponent> mindEnt = (mindId, mind);
             Entity<MindContainerComponent> containerEnt = (oldEntity.Value, oldContainer);
+
+            RaiseLocalEvent(oldEntity.Value, new BeforeMindRemovedMessage(mindEnt, containerEnt, entity));
+            RaiseLocalEvent(mindId, new BeforeMindGotRemovedEvent(mindEnt, containerEnt, entity));
+
+            oldContainer.Mind = null;
+            mind.OwnedEntity = null;
+
             RaiseLocalEvent(oldEntity.Value, new MindRemovedMessage(mindEnt, containerEnt, entity));
             RaiseLocalEvent(mindId, new MindGotRemovedEvent(mindEnt, containerEnt, entity));
             Dirty(oldEntity.Value, oldContainer);
