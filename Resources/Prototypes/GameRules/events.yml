@@ -18,7 +18,7 @@
     - id: MouseMigration
     - id: PowerGridCheck
     - id: RandomSentience
-    - id: SlimesSpawn
+    - id: SlimesSpawnHorde
     - id: SolarFlare
     - id: SnakeSpawnHorde
     - id: SpiderClownSpawnHorde
