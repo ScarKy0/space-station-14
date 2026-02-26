@@ -18,6 +18,26 @@
 # events
 
 - type: entity
+  id: MouseMigrationHorde
+  parent: BaseStationEventShortDelay
+  components:
+  - type: StationEvent
+    startAnnouncement: station-event-vent-creatures-start-horde-announcement
+    startAudio:
+      path: /Audio/Announcements/attention.ogg
+    earliestStart: 15
+    weight: 6
+    duration: 50
+    maxDuration: 90
+  - type: VentHordeRule
+    table: !type:GroupSelector
+      rolls: !type:RangeNumberSelector
+        range: 4, 7
+      children:
+      - id: MobGiantSpiderAngry
+        weight: 0.32
+
+- type: entity
   id: MouseMigration
   parent: BaseStationEventShortDelay
   components:
