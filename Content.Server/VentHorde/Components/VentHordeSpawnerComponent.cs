@@ -46,18 +46,27 @@ public sealed partial class VentHordeSpawnerComponent : Component
     [AutoPausedField]
     public TimeSpan? SpawnTime;
 
+    /// <summary>
+    /// Plays on loop when a vent is selected as a spawner.
+    /// </summary>
     [DataField]
     public SoundSpecifier PassiveSound = new SoundPathSpecifier("/Audio/Machines/airlock_creaking.ogg")
     {
         Params = AudioParams.Default.WithVolume(-3f),
     };
 
+    /// <summary>
+    /// Plays when the entities are thrown out of the vent.
+    /// </summary>
     [DataField]
     public SoundSpecifier EndSound = new SoundPathSpecifier("/Audio/Weapons/Guns/Gunshots/grenade_launcher.ogg")
     {
         Params = AudioParams.Default.WithVolume(-3f),
     };
 
+    /// <summary>
+    /// The PassiveSound entity, used to cancel the audio.
+    /// </summary>
     [DataField]
     [ViewVariables(VVAccess.ReadOnly)]
     public EntityUid? AudioStream;

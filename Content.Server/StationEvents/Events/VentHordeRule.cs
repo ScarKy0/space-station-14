@@ -11,6 +11,9 @@ using Robust.Shared.Timing;
 
 namespace Content.Server.StationEvents.Events;
 
+/// <summary>
+/// Variant of <see cref="VentCrittersRule"/> that selects a single vent and spawns all entities there.
+/// </summary>
 public sealed class VentHordeRule : StationEventSystem<VentHordeRuleComponent>
 {
     /*
@@ -62,21 +65,28 @@ public sealed class VentHordeRule : StationEventSystem<VentHordeRuleComponent>
     {
         base.Started(uid, component, gameRule, args);
 
-        if (TryComp<StationEventComponent>(uid, out var stationEventComp) && stationEventComp.StartAnnouncement != null)
+        if (!Exists(component.ChosenVent))
         {
-            // We grab when the gamerule is expected to end and subtract the current time from it to get the duration.
-            var duration = (stationEventComp.EndTime - _timing.CurTime) ?? TimeSpan.Zero;
-
-            var spawns = _table.GetSpawns(component.Table);
-
-            if (component.ChosenVent == null)
-                return;
-
-            // And start the spawn at the chosen vent.
-            // The duration is the same as the expected gamerule end time, but that is only for convenience.
-            // The spawn can happen early in certain circumstances anyway.
-            _horde.StartHordeSpawn(component.ChosenVent.Value, spawns.ToList(), duration);
+            Log.Warning($"Chosen vent for {args.RuleId} does not exist!");
+            ForceEndSelf(uid, gameRule);
+            return;
         }
+
+        if (!TryComp<StationEventComponent>(uid, out var stationEventComp))
+            return;
+
+        // We grab when the gamerule is expected to end and subtract the current time from it to get the duration.
+        var duration = (stationEventComp.EndTime - _timing.CurTime) ?? TimeSpan.Zero;
+
+        var spawns = _table.GetSpawns(component.Table);
+
+        if (component.ChosenVent == null)
+            return;
+
+        // And start the spawn at the chosen vent.
+        // The duration is the same as the expected gamerule end time, but that is only for convenience.
+        // The spawn can happen early in certain circumstances anyway.
+        _horde.StartHordeSpawn(component.ChosenVent.Value, spawns.ToList(), duration);
     }
 
     private EntityUid? ChooseVent()

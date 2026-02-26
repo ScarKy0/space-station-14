@@ -35,6 +35,7 @@ public sealed class VentHordeSystem : EntitySystem
 
     private void OnSpawnerShutdown(Entity<VentHordeSpawnerComponent> entity, ref ComponentShutdown args)
     {
+        _audio.Stop(entity.Comp.AudioStream);
         RemCompDeferred<JitteringComponent>(entity);
     }
 
@@ -46,6 +47,10 @@ public sealed class VentHordeSystem : EntitySystem
 
     private void OnSpawnerAnchored(Entity<VentHordeSpawnerComponent> entity, ref AnchorStateChangedEvent args)
     {
+        // Anchor state changes when the entity is broken, to avoid double spawning we check if the entity is gonna be deleted.
+        if (TerminatingOrDeleted(entity))
+            return;
+
         // There is no escape.
         EndHordeSpawn(entity);
     }
