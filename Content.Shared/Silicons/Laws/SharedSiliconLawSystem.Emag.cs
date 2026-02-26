@@ -2,6 +2,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Content.Shared.Emag.Components;
 using Content.Shared.Emag.Systems;
+using Content.Shared.Mind.Components;
 using Content.Shared.Silicons.Borgs.Components;
 using Content.Shared.Silicons.Laws.Components;
 using Content.Shared.Wires;
@@ -63,17 +64,17 @@ public abstract partial class SharedSiliconLawSystem
         }
 
         // Check for mind on the provider (Brain or Chassis)
-        EntityUid? mindId = null;
-        if (_mind.TryGetMind(ent.Owner, out var mind, out _)) // Check chassis for a mind first.
+        bool foundMind = false;
+        if (TryComp<MindContainerComponent>(ent, out var mindContainer) && mindContainer.HasMind) // Check chassis for a mind first.
         {
-            mindId = mind;
+            foundMind = true;
         }
-        else if (ent.Comp.BrainEntity is { } brainId && _mind.TryGetMind(brainId, out mind, out _)) // Then check the brain.
+        else if (ent.Comp.BrainEntity is { } brainId && TryComp<MindContainerComponent>(brainId, out var brainMindContainer) && brainMindContainer.HasMind) // Then check the brain.
         {
-            mindId = mind;
+            foundMind = true;
         }
 
-        if (mindId == null)
+        if (!foundMind)
         {
             _popup.PopupClient(Loc.GetString("law-emag-require-mind", ("entity", providerUid)), ent, args.UserUid);
             return;
@@ -126,7 +127,7 @@ public abstract partial class SharedSiliconLawSystem
         }
 
         // The brain must have a mind to be emagged.
-        if (!_mind.TryGetMind(ent, out var mindId, out _))
+        if (!TryComp<MindContainerComponent>(ent, out var mindContainer) || !mindContainer.HasMind)
         {
             _popup.PopupClient(Loc.GetString("law-emag-require-mind", ("entity", ent)), ent, args.UserUid);
             return;
