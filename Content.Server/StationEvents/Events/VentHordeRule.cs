@@ -1,6 +1,7 @@
 using System.Linq;
 using Content.Server.Pinpointer;
 using Content.Server.StationEvents.Components;
+using Content.Server.VentHorde.Components;
 using Content.Server.VentHorde.Systems;
 using Content.Shared.EntityTable;
 using Content.Shared.GameTicking.Components;
@@ -94,6 +95,9 @@ public sealed class VentHordeRule : StationEventSystem<VentHordeRuleComponent>
         while (locations.MoveNext(out var uid, out _, out var transform))
         {
             if (!transform.Anchored)
+                continue;
+
+            if (HasComp<VentHordeSpawnerComponent>(uid))
                 continue;
 
             if (CompOrNull<StationMemberComponent>(transform.GridUid)?.Station == station)
