@@ -84,7 +84,7 @@ public sealed class VentHordeRule : StationEventSystem<VentHordeRuleComponent>
             return;
 
         // And start the spawn at the chosen vent.
-        // The duration is the same as the expected gamerule end time, but that is only for convenience.
+        // The duration is the same as the time until expected gamerule end time, but that is only for convenience.
         // The spawn can happen early in certain circumstances anyway.
         _horde.StartHordeSpawn(component.ChosenVent.Value, spawns.ToList(), duration);
     }

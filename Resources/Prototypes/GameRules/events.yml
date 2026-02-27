@@ -464,7 +464,7 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: 4,7
+      rolls: 4, 8
       children:
       - id: MobAdultSlimesBlueAngry
       - id: MobAdultSlimesGreenAngry
@@ -485,7 +485,7 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: 4,7
+      rolls: 4, 8
       children:
       - id: MobPurpleSnake
       - id: MobSmallPurpleSnake
@@ -506,7 +506,7 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: 4,7
+      rolls: 4, 8
       children:
       - id: MobGiantSpiderAngry
 
@@ -525,7 +525,7 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: 4, 7
+      rolls: 4, 8
       children:
       - id: MobClownSpider
 

@@ -7,7 +7,7 @@ namespace Content.Server.StationEvents.Components;
 public sealed partial class VentHordeRuleComponent : Component
 {
     /// <summary>
-    /// The mobs to spawn from the vent.
+    /// The table of possible mobs to spawn from the vent.
     /// </summary>
     [DataField(required: true)]
     public EntityTableSelector Table = default!;
