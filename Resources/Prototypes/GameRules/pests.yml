@@ -7,7 +7,7 @@
     - id: SnailMigrationLowPop
     - id: CockroachMigration
     - id: MouseMigration
-    - id: RandomCritterMigrationHorde
+    - id: RandomCritterHorde
 
 - type: entityTable
   id: SpicyPestEventsTable
@@ -114,7 +114,7 @@
       prob: 0.00001 #  ~ 1:2000 snails
 
 - type: entity
-  id: RandomCritterMigrationHorde # My deepest apologies, Mr. Secoff. You just wasted your time :)
+  id: RandomCritterHorde # My deepest apologies, Mr. Secoff. You just wasted your time :)
   parent: BaseStationEventShortDelay
   components:
   - type: StationEvent
@@ -128,13 +128,14 @@
     reoccurrenceDelay: 15 # Shorter because this event is basically a nat zero on the round. It only exists to potentially confuse security or the crew
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: !type:RangeNumberSelector
-        range: 2,4
+      rolls: 2,4
       children:
+      - id: MobSnail
+        weight: 0.33
       - id: MobSnailSpeed
-        weight: 0.5
+        weight: 0.33
       - id: MobSnailMoth
-        weight: 0.5
+        weight: 0.33
       - id: MobCockroach
         weight: 0.4
       - id: MobMothroach

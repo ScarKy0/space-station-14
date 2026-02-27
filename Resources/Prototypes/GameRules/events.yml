@@ -464,15 +464,11 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: !type:RangeNumberSelector
-        range: 4, 7
+      rolls: 4,7
       children:
       - id: MobAdultSlimesBlueAngry
-        weight: 0.32
       - id: MobAdultSlimesGreenAngry
-        weight: 0.32
       - id: MobAdultSlimesYellowAngry
-        weight: 0.32
 
 - type: entity
   id: SnakeSpawnHorde
@@ -489,15 +485,11 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: !type:RangeNumberSelector
-        range: 4, 7
+      rolls: 4,7
       children:
       - id: MobPurpleSnake
-        weight: 0.32
       - id: MobSmallPurpleSnake
-        weight: 0.32
       - id: MobCobraSpace
-        weight: 0.32
 
 - type: entity
   id: SpiderSpawnHorde
@@ -514,8 +506,7 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: !type:RangeNumberSelector
-        range: 4, 7
+      rolls: 4,7
       children:
       - id: MobGiantSpiderAngry
 
@@ -534,8 +525,7 @@
     maxDuration: 45
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: !type:RangeNumberSelector
-        range: 4, 7
+      rolls: 4, 7
       children:
       - id: MobClownSpider
 
