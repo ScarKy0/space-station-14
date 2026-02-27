@@ -114,8 +114,8 @@
       prob: 0.00001 #  ~ 1:2000 snails
 
 - type: entity
-  id: RandomCritterHorde # My deepest apologies, Mr. Secoff. You just wasted your time :)
   parent: BaseStationEventShortDelay
+  id: RandomCritterHorde # My deepest apologies, Mr. Secoff. You just wasted your time :)
   components:
   - type: StationEvent
     startAnnouncement: station-event-vent-creatures-start-horde-announcement
