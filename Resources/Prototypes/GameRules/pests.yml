@@ -128,23 +128,21 @@
     reoccurrenceDelay: 15 # Shorter because this event is basically a nat zero on the round. It only exists to potentially confuse security or the crew
   - type: VentHordeRule
     table: !type:GroupSelector
-      rolls: 2,4
+      rolls: 3,5
       children:
-      - id: MobSnail
-        weight: 0.33
-      - id: MobSnailSpeed
-        weight: 0.33
-      - id: MobSnailMoth
-        weight: 0.33
-      - id: MobCockroach
-        weight: 0.4
-      - id: MobMothroach
-        weight: 0.4
-      - id: MobMoproach
-        weight: 0.2
-      - id: MobMouse
-        weight: 0.33
-      - id: MobMouse1
-        weight: 0.33
-      - id: MobMouse2
-        weight: 0.33
+      - !type:GroupSelector
+        children: # Increased chances for special snails on purpose. Makes it a bit more interesting.
+        - id: MobSnail
+        - id: MobSnailSpeed
+        - id: MobSnailMoth
+      - !type:GroupSelector
+        children: # Increased chances for special roaches on purpose. Makes it a bit more interesting.
+        - id: MobCockroach
+        - id: MobMothroach
+        - id: MobMoproach
+          weight: 0.5
+      - !type:GroupSelector
+        children:
+        - id: MobMouse
+        - id: MobMouse1
+        - id: MobMouse2
