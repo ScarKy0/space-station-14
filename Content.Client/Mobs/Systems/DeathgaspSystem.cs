@@ -3,4 +3,4 @@
 namespace Content.Client.Mobs;
 
 /// <see cref="DeathgaspComponent"/>
-public sealed class DeathgaspSystem : SharedDeathgaspSystem;
+public sealed partial class DeathgaspSystem : SharedDeathgaspSystem;

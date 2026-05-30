@@ -11,16 +11,16 @@ using Robust.Shared.Audio.Systems;
 
 namespace Content.Shared.Changeling.Systems;
 
-public sealed class ChangelingStasisSystem : EntitySystem
+public sealed partial class ChangelingStasisSystem : EntitySystem
 {
-    [Dependency] private readonly SharedActionsSystem _actions = default!;
-    [Dependency] private readonly SharedAudioSystem _audio = default!;
-    [Dependency] private readonly SharedPopupSystem _popup = default!;
-    [Dependency] private readonly MetaDataSystem _metaData = default!;
-    [Dependency] private readonly MobStateSystem _mobs = default!;
-    [Dependency] private readonly DamageableSystem _damage = default!;
-    [Dependency] private readonly SharedBloodstreamSystem _bloodstream = default!;
-    [Dependency] private readonly SharedDeathgaspSystem _deathgasp = default!;
+    [Dependency] private SharedActionsSystem _actions = default!;
+    [Dependency] private SharedAudioSystem _audio = default!;
+    [Dependency] private SharedPopupSystem _popup = default!;
+    [Dependency] private MetaDataSystem _metaData = default!;
+    [Dependency] private MobStateSystem _mobs = default!;
+    [Dependency] private DamageableSystem _damage = default!;
+    [Dependency] private SharedBloodstreamSystem _bloodstream = default!;
+    [Dependency] private SharedDeathgaspSystem _deathgasp = default!;
 
     public override void Initialize()
     {

@@ -1,8 +1,7 @@
-﻿
-namespace Content.Shared.Mobs;
+﻿namespace Content.Shared.Mobs;
 
 /// <see cref="DeathgaspComponent"/>
-public abstract class SharedDeathgaspSystem : EntitySystem
+public abstract partial class SharedDeathgaspSystem : EntitySystem
 {
     /// <summary>
     /// Causes an entity to perform their deathgasp emote, if they have one.
