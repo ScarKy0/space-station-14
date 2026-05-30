@@ -8,6 +8,12 @@
     },
     "states": [
         {
+            "name": "background"
+        },
+        {
+            "name": "frame"
+        },
+        {
             "name": "transform"
         },
         {

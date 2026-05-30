@@ -7,9 +7,9 @@ using Robust.Shared.Prototypes;
 namespace Content.Server.Mobs;
 
 /// <see cref="DeathgaspComponent"/>
-public sealed class DeathgaspSystem : SharedDeathgaspSystem
+public sealed partial class DeathgaspSystem: EntitySystem
 {
-    [Dependency] private readonly ChatSystem _chat = default!;
+    [Dependency] private ChatSystem _chat = default!;
 
     public override void Initialize()
     {
@@ -27,7 +27,10 @@ public sealed class DeathgaspSystem : SharedDeathgaspSystem
         Deathgasp(uid, component);
     }
 
-    public override bool Deathgasp(EntityUid uid, DeathgaspComponent? component = null)
+    /// <summary>
+    ///     Causes an entity to perform their deathgasp emote, if they have one.
+    /// </summary>
+    public bool Deathgasp(EntityUid uid, DeathgaspComponent? component = null)
     {
         if (!Resolve(uid, ref component, false))
             return false;
