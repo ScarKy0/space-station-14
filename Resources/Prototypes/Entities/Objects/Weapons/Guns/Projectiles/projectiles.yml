@@ -1012,6 +1012,16 @@
       muzzleFlash: null
 
 - type: entity
+  parent: BulletAcid
+  id: BulletAcidStrong
+  categories: [ HideSpawnMenu ]
+  components:
+  - type: Projectile
+    damage:
+      types:
+        Caustic: 15
+
+- type: entity
   parent: [SolutionVapor, SolutionSmall]
   id: BulletWaterShot
   name: water

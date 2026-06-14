@@ -179,4 +179,10 @@ public abstract partial class BaseActionEvent : HandledEntityEventArgs
     /// Should we toggle the action entity?
     /// </summary>
     public bool Toggle;
+
+    /// <summary>
+    /// Optional override for the cooldown of the ability.
+    /// If null, will just use the value in the <see cref="ActionComponent"/>.
+    /// </summary>
+    public TimeSpan? Cooldown;
 }

@@ -183,12 +183,17 @@ public abstract partial class SharedActionsSystem : EntitySystem
     /// Set an action's cooldown to its use delay, if it has one.
     /// If there is no set use delay this does nothing.
     /// </summary>
-    public void StartUseDelay(Entity<ActionComponent?>? action)
+    public void StartUseDelay(Entity<ActionComponent?>? action, TimeSpan? delay = null)
     {
-        if (GetAction(action) is not {} ent || ent.Comp.UseDelay is not {} delay)
+        if (GetAction(action) is not { } ent)
             return;
 
-        SetCooldown((ent, ent), delay);
+        var actualDelay = delay ?? ent.Comp.UseDelay;
+
+        if (actualDelay == null)
+            return;
+
+        SetCooldown((ent, ent), actualDelay.Value);
     }
 
     public void SetUseDelay(Entity<ActionComponent?>? action, TimeSpan? delay)
@@ -585,7 +590,7 @@ public abstract partial class SharedActionsSystem : EntitySystem
         _audio.PlayPredicted(action.Comp.Sound, performer, predicted ? performer : null);
 
         RemoveCooldown((action, action));
-        StartUseDelay((action, action));
+        StartUseDelay((action, action), ev.Cooldown);
 
         UpdateAction(action);
 

@@ -30,10 +30,16 @@
     useDelay: 60 # TODO: Short cooldown but chemical cost
     raiseOnAction: true
     checkCanInteract: false
+    itemIconStyle: BigAction
     icon:
       sprite: Interface/Actions/changeling2.rsi
       state: biodegrade
-  - type: InstantAction
+  - type: TargetAction
+    range: 15
+    checkCanAccess: false
+  - type: EntityTargetAction
+    event: null # Has to be null, because targeting logic alongside WorldTarget is handled by WorldTarget itself
+  - type: WorldTargetAction
     event: !type:ChangelingBiodegradeActionEvent
   - type: ChangelingBiodegradeAbility
 
