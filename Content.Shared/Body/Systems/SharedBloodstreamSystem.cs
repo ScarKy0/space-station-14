@@ -622,6 +622,12 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
         return bloodData;
     }
 
+    /// <summary>
+    /// Copies the values in <see cref="BloodstreamComponent"/> of one entity to another.
+    /// If the component isn't on the target entity, it is added.
+    /// </summary>
+    /// <param name="source">The entity who's component to use.</param>
+    /// <param name="target">The target to clone the component onto.</param>
     public void CopyComponent(Entity<BloodstreamComponent?> source, EntityUid target)
     {
         if (!Resolve(source, ref source.Comp))
@@ -630,7 +636,8 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
         // We don't create the component before adding it here.
         // This is because it causes the initialization to get a bit fucky together with ChangeBloodReagent.
         // The reagents won't actually change unless we do it this way.
-        // The DNA and stuff updated by themselves anyways, so we're in the clear to do it this way.
+        // The DNA and stuff is updated by themselves anyway.
+        // BleedAmount is excluded on purpose. There is no point in cloning how much someone is bleeding at the moment.
         var cloneComp = EnsureComp<BloodstreamComponent>(target);
         cloneComp.UpdateInterval = source.Comp.UpdateInterval;
         cloneComp.UpdateIntervalMultiplier = source.Comp.UpdateIntervalMultiplier;
@@ -643,6 +650,9 @@ public abstract partial class SharedBloodstreamSystem : EntitySystem
         cloneComp.BleedPuddleThreshold = source.Comp.BleedPuddleThreshold;
         cloneComp.DamageBleedModifiers = source.Comp.DamageBleedModifiers;
         cloneComp.MaxVolumeModifier = source.Comp.MaxVolumeModifier;
+        cloneComp.InstantBloodSound = source.Comp.InstantBloodSound;
+        cloneComp.BloodHealedSound = source.Comp.BloodHealedSound;
+        cloneComp.BloodHealedSoundThreshold = source.Comp.BloodHealedSoundThreshold;
 
         Dirty(target, cloneComp);
 
