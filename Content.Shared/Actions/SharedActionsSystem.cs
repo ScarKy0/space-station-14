@@ -697,7 +697,6 @@ public abstract partial class SharedActionsSystem : EntitySystem
     public bool AddActionDirect(Entity<ActionsComponent?> performer,
         Entity<ActionComponent?>? action)
     {
-        Log.Debug("Checking action");
         if (GetAction(action) is not {} ent)
             return false;
 
@@ -705,7 +704,6 @@ public abstract partial class SharedActionsSystem : EntitySystem
                           (TryComp(ent.Comp.Container, out ActionsContainerComponent? containerComp)
                            && containerComp.Container.Contains(ent)));
 
-        Log.Debug("Checking if attached exists");
         if (ent.Comp.AttachedEntity is {} user)
             RemoveAction(user, (ent, ent));
 

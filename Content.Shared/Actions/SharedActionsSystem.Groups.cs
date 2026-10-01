@@ -22,32 +22,23 @@ public abstract partial class SharedActionsSystem
     [SubscribeLocalEvent]
     private void OnGroupedActionAdded(Entity<GroupedActionComponent> ent, ref ActionGotAttachedEvent args)
     {
-        Log.Debug("Grouped action inserting.");
-        if (!TryComp<ActionComponent>(ent, out var actions))
-            return;
-
-        Log.Debug("Indexing proto");
         if (!ProtoMan.TryIndex(ent.Comp.Group, out var proto))
             return;
 
-        Log.Debug("Finding grouping action");
         if (TryGetGroupingAction(args.Owner, ent.Comp.Group, out _))
             return;
 
-        Log.Debug("Adding action.");
         AddAction(args.Owner, proto.GroupAction);
     }
 
     [SubscribeLocalEvent]
     private void OnGroupedActionRemoved(Entity<GroupedActionComponent> ent, ref ActionGotDetachedEvent args)
     {
-        if (!TryComp<ActionComponent>(ent, out var actions))
+        // Don't remove if there are other actions in the group.
+        if (GetActionsInGroup(args.Owner, ent.Comp.Group).Count > 0)
             return;
 
-        // Check if there are other actions in the group.
-        if (!TryGetActionsInGroup(args.Owner, ent.Comp.Group, out _))
-            return;
-
+        // Can't remove a grouping action if it doesn't exist.
         if (!TryGetGroupingAction(args.Owner, ent.Comp.Group, out var grouping))
             return;
 
@@ -86,6 +77,14 @@ public abstract partial class SharedActionsSystem
         return grouping.Count > 0;
     }
 
+    public HashSet<EntityUid> GetActionsInGroup(Entity<ActionsComponent?> entity, ProtoId<ActionGroupPrototype> protoId)
+    {
+        if (!TryGetActionsInGroup(entity, protoId, out var grouping))
+            return new HashSet<EntityUid>();
+
+        return grouping;
+    }
+
     public bool TryGetGroupingAction(Entity<ActionsComponent?> entity, ProtoId<ActionGroupPrototype> protoId, [NotNullWhen(true)] out EntityUid? grouping)
     {
         grouping = null;
@@ -96,7 +95,7 @@ public abstract partial class SharedActionsSystem
 
         foreach (var action in entity.Comp.Actions)
         {
-            if (!TryComp<GroupedActionComponent>(action, out var groupedComp))
+            if (!TryComp<GroupingActionComponent>(action, out var groupedComp))
                 continue;
 
             if (groupedComp.Group == protoId)
