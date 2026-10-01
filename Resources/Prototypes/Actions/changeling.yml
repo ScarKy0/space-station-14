@@ -200,6 +200,8 @@
   parent: BaseAction
   id: BaseActionChangelingSting
   components:
+  - type: GroupedAction
+    group: ChangelingShort
   - type: TargetAction
     interactOnMiss: false
   - type: EntityTargetAction

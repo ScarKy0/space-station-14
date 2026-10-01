@@ -1,0 +1,15 @@
+- type: entity
+  parent: BaseMentalAction
+  id: GroupingAction
+  name: Grouped Action
+  components:
+  - type: Action
+    raiseOnAction: true
+  - type: GroupingAction
+    group: ChangelingShort
+  - type: InstantAction
+    event: !type:GroupedActionOpenRadialEvent
+
+- type: actionGroup
+  id: ChangelingShort
+  groupAction: GroupingAction

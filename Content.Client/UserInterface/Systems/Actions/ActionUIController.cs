@@ -230,7 +230,7 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         CommandBinds.Unregister<ActionUIController>();
     }
 
-    private void TriggerAction(int index)
+    public void TriggerAction(int index)
     {
         if (!_actions.TryGetValue(index, out var actionId) ||
             _actionsSystem?.GetAction(actionId) is not {} action)
@@ -238,6 +238,11 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             return;
         }
 
+        TriggerAction(action);
+    }
+
+    public void TriggerAction(Entity<ActionComponent> action)
+    {
         // TODO: probably should have a clientside event raised for flexibility
         if (EntityManager.TryGetComponent<TargetActionComponent>(action, out var target))
             ToggleTargeting((action, action, target));
