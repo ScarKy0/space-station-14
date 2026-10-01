@@ -697,6 +697,7 @@ public abstract partial class SharedActionsSystem : EntitySystem
     public bool AddActionDirect(Entity<ActionsComponent?> performer,
         Entity<ActionComponent?>? action)
     {
+        Log.Debug("Checking action");
         if (GetAction(action) is not {} ent)
             return false;
 
@@ -704,6 +705,7 @@ public abstract partial class SharedActionsSystem : EntitySystem
                           (TryComp(ent.Comp.Container, out ActionsContainerComponent? containerComp)
                            && containerComp.Container.Contains(ent)));
 
+        Log.Debug("Checking if attached exists");
         if (ent.Comp.AttachedEntity is {} user)
             RemoveAction(user, (ent, ent));
 
@@ -717,6 +719,13 @@ public abstract partial class SharedActionsSystem : EntitySystem
         DirtyField(ent, ent.Comp, nameof(ActionComponent.AttachedEntity));
         performer.Comp.Actions.Add(ent);
         Dirty(performer, performer.Comp);
+
+        var ev = new ActionAttachedEvent(ent, performer);
+        RaiseLocalEvent(performer, ref ev);
+
+        var actionEv = new ActionGotAttachedEvent(ent, performer);
+        RaiseLocalEvent(ent, ref actionEv);
+
         ActionAdded((performer, performer.Comp), (ent, ent.Comp));
         return true;
     }
@@ -874,6 +883,13 @@ public abstract partial class SharedActionsSystem : EntitySystem
         Dirty(performer, performer.Comp);
         ent.Comp.AttachedEntity = null;
         DirtyField(ent, ent.Comp, nameof(ActionComponent.AttachedEntity));
+
+        var ev = new ActionDetachedEvent(ent, performer);
+        RaiseLocalEvent(performer, ref ev);
+
+        var actionEv = new ActionGotDetachedEvent(ent, performer);
+        RaiseLocalEvent(ent, ref actionEv);
+
         ActionRemoved((performer, performer.Comp), ent);
 
         if (ent.Comp.Temporary)
@@ -1072,3 +1088,35 @@ public abstract partial class SharedActionsSystem : EntitySystem
         Dirty(ent);
     }
 }
+
+/// <summary>
+/// Raised on an entity when an action gets attached to it.
+/// </summary>
+/// <param name="Action"></param>
+/// <param name="Owner"></param>
+[ByRefEvent]
+public record struct ActionAttachedEvent(EntityUid Action, EntityUid Owner);
+
+/// <summary>
+/// Raised on an action when it gets attached to an entity.
+/// </summary>
+/// <param name="Action"></param>
+/// <param name="Owner"></param>
+[ByRefEvent]
+public record struct ActionGotAttachedEvent(EntityUid Action, EntityUid Owner);
+
+/// <summary>
+/// Raised on an entity when an action gets detached from it.
+/// </summary>
+/// <param name="Action"></param>
+/// <param name="Owner"></param>
+[ByRefEvent]
+public record struct ActionDetachedEvent(EntityUid Action, EntityUid Owner);
+
+/// <summary>
+/// Raised on an action when it gets attached to an entity.
+/// </summary>
+/// <param name="Action"></param>
+/// <param name="Owner"></param>
+[ByRefEvent]
+public record struct ActionGotDetachedEvent(EntityUid Action, EntityUid Owner);

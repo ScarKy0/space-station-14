@@ -263,6 +263,9 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (_actions.Contains(action))
             return;
 
+        if (EntityManager.HasComponent<GroupedActionComponent>(action))
+            return;
+
         _actions.Add(action);
     }
 
