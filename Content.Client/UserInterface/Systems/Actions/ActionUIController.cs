@@ -13,6 +13,7 @@ using Content.Client.UserInterface.Systems.Actions.Windows;
 using Content.Client.UserInterface.Systems.Gameplay;
 using Content.Shared.Actions;
 using Content.Shared.Actions.Components;
+using Content.Shared.Actions.Prototypes;
 using Content.Shared.Charges.Systems;
 using Content.Shared.Input;
 using Robust.Client.GameObjects;
@@ -25,6 +26,7 @@ using Robust.Client.UserInterface.Controls;
 using Robust.Shared.Graphics.RSI;
 using Robust.Shared.Input;
 using Robust.Shared.Input.Binding;
+using Robust.Shared.Prototypes;
 using Robust.Shared.Timing;
 using Robust.Shared.Utility;
 using static Content.Client.Actions.ActionsSystem;
@@ -250,6 +252,38 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
             _actionsSystem?.TriggerAction(action);
     }
 
+    public void HandleActionGrouping(ProtoId<ActionGroupPrototype> group, Entity<GroupedActionComponent> groupedAction)
+    {
+        if (_playerManager.LocalEntity is not { } user)
+            return;
+
+        var inGroup = _actionsSystem?.GetActionsInGroup(user, group);
+
+        if (inGroup == null)
+            return;
+
+        if (inGroup.Count == 0)
+            return;
+
+        if (inGroup.Count == 1)
+        {
+            foreach (var action in inGroup)
+            {
+                if (!_actions.Contains(action))
+                    _actions.Add(action);
+            }
+        }
+
+        if (inGroup.Count > 1)
+        {
+            foreach (var action in inGroup)
+            {
+                if (_actions.Contains(action))
+                    _actions.Remove(action);
+            }
+        }
+    }
+
     private void OnActionAdded(EntityUid actionId)
     {
         if (_actionsSystem?.GetAction(actionId) is not {} action)
@@ -263,8 +297,13 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
         if (_actions.Contains(action))
             return;
 
-        if (EntityManager.HasComponent<GroupedActionComponent>(action))
+        // Do not add grouped actions if there are already other grouped actions.
+        // Once the second gets added, a group will be formed instead.
+        if (_playerManager.LocalEntity != null && EntityManager.TryGetComponent<GroupedActionComponent>(action, out var group) && _actionsSystem.GetActionsInGroup(_playerManager.LocalEntity.Value, group.Group).Count > 1)
+        {
+            HandleActionGrouping(group.Group, (action, group));
             return;
+        }
 
         _actions.Add(action);
     }
@@ -276,6 +315,11 @@ public sealed partial class ActionUIController : UIController, IOnStateChanged<G
 
         if (actionId == SelectingTargetFor)
             StopTargeting();
+
+        if (_playerManager.LocalEntity != null && EntityManager.TryGetComponent<GroupedActionComponent>(actionId, out var group) && _actionsSystem?.GetActionsInGroup(_playerManager.LocalEntity.Value, group.Group).Count == 1)
+        {
+            HandleActionGrouping(group.Group, (actionId, group));
+        }
 
         _actions.RemoveAll(x => x == actionId);
     }

@@ -22,6 +22,10 @@ public abstract partial class SharedActionsSystem
     [SubscribeLocalEvent]
     private void OnGroupedActionAdded(Entity<GroupedActionComponent> ent, ref ActionGotAttachedEvent args)
     {
+        // Do not group if there is only one action in the group.
+        if (GetActionsInGroup(args.Owner, ent.Comp.Group).Count <= 1)
+            return;
+
         if (!ProtoMan.TryIndex(ent.Comp.Group, out var proto))
             return;
 
@@ -35,7 +39,7 @@ public abstract partial class SharedActionsSystem
     private void OnGroupedActionRemoved(Entity<GroupedActionComponent> ent, ref ActionGotDetachedEvent args)
     {
         // Don't remove if there are other actions in the group.
-        if (GetActionsInGroup(args.Owner, ent.Comp.Group).Count > 0)
+        if (GetActionsInGroup(args.Owner, ent.Comp.Group).Count > 1)
             return;
 
         // Can't remove a grouping action if it doesn't exist.
